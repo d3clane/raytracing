@@ -8,18 +8,18 @@ namespace Graphics
 
 class Event;
 
-struct Point
+struct WindowPoint
 {
     int x, y;
 
-    Point(int x, int y) : x(x), y(y) {}
+    WindowPoint(int x, int y) : x(x), y(y) {}
 };
 
-struct Line
+struct WindowLine
 {
-    Point start, end;
+    WindowPoint start, end;
 
-    Line(const Point& start, const Point& end) : start(start), end(end) {}
+    WindowLine(const WindowPoint& start, const WindowPoint& end) : start(start), end(end) {}
 };
 
 class PixelsArray;
@@ -28,16 +28,17 @@ class Window
 {
 private:
     sf::RenderWindow window_;
-    unsigned int width_, height_;
 
 public:
+    const unsigned int width_, height_;
+
     Window(int width, int height, const char* title);
 
     bool isOpen();
     void close();
     void clear();
 
-    void drawLine  (Line line);
+    void drawLine  (WindowLine line);
     void drawPixels(const PixelsArray& pixels);
 
     void display();

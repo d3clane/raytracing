@@ -1,0 +1,6 @@
+#ifndef LIGHT_SOURCE_HPP
+#define LIGHT_SOURCE_HPP
+
+
+
+#endif // LIGHT_SOURCE_HPP

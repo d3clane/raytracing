@@ -53,7 +53,7 @@ void Window::clear()
     window_.clear();
 }
 
-void Window::drawLine(Line line)
+void Window::drawLine(WindowLine line)
 {
     sf::Vertex drewLine[] =
     {
@@ -90,7 +90,7 @@ bool Window::pollEvent(Event& event)
 {
     bool result = window_.pollEvent(event.sfEvent);
 
-    event.mousePos = Point(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
+    event.mousePos = WindowPoint(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
 
     switch (event.sfEvent.type)
     {
@@ -105,7 +105,7 @@ bool Window::pollEvent(Event& event)
         
         case sf::Event::MouseMoved:
             event.type = Event::EventType::MouseMove;
-            event.mousePos = Point(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
+            event.mousePos = WindowPoint(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
             break;
         
         default:

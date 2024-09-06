@@ -37,7 +37,7 @@ public:
     };
 
     EventType type;
-    Point mousePos;
+    WindowPoint mousePos;
     KeyCode keyCode;
 
     Event();

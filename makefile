@@ -19,7 +19,7 @@ COMMONINC := -I./include
 LIB_LINK  := -I/opt/homebrew/Cellar/sfml/2.6.1/include -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 PROGRAM_DIR  := $(OUT_O_DIR)/bin
-PROGRAM_NAME := vectors.out
+PROGRAM_NAME := sphere.out
 
 TESTS = ./Tests
 
@@ -28,7 +28,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 override CFLAGS += $(COMMONINC)
 override CFLAGS += $(LIB_LINK)
 
-CPPSRC = 
+CPPSRC = src/CoordsSystem.cpp src/Events.cpp src/GraphicsWindow.cpp src/PixelsArray.cpp src/Sphere.cpp src/main.cpp
 
 CPPOBJ := $(addprefix $(OUT_O_DIR)/,$(CPPSRC:.cpp=.o))
 DEPS = $(CPPOBJ:.o=.d)
