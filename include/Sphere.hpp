@@ -11,27 +11,17 @@ class Sphere
 {
     Point center_;
     double radius_;
-
-    uint8_t rgbaColor_[Graphics::kBytesPerPixel];
-
+    Graphics::Color color_;
 public:
-    Sphere(const Point& center, const double radius, uint8_t rgbaColor[Graphics::kBytesPerPixel]);
+    Sphere(const Point& center, const double radius, const Graphics::Color& color);
 
     bool isInside(const Point& point) const;
 
-    inline double radius() const { return radius_; }
-    inline const uint8_t* rgbaColor() const { return rgbaColor_; }
-
-    inline const double getZ(const double x, const double y) const 
-    {
-        double dx = x - center_.x;
-        double dy = y - center_.y;
-
-        double squareZ = radius_ * radius_ - dx * dx - dy * dy;
-
-        if (squareZ < 0) return NAN;
-        return sqrt(squareZ);
-    }
+    Point center() const { return center_; }
+    Graphics::Color color() const { return color_; }
+    
+    double calcZ(const Graphics::WindowPoint& windowPoint, const CoordsSystem& coordsSystem) const;
+    double calcZ(const double x, const double y) const; 
 };
 
 } // Scene

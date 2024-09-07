@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "CoordsSystem.hpp"
+#include "PixelsArray.hpp"
 #include "Sphere.hpp"
 
 namespace Scene
@@ -55,14 +56,14 @@ void CoordsSystem::drawSphere(Graphics::Window& window, const Sphere& sphere) co
         {
             // TODO: function - setPixel
 
-            double z = sphere.getZ(x, y);
+            double z = sphere.calcZ(x, y);
             if (std::isfinite(z))
             {
                 Point point{x, y, z};
-                pixelsArray.setPixel(x, y, 10 * z, 0, 0, 255);
+                pixelsArray.setPixel(x, y, Graphics::Color(10 * z, 0, 0, 255));
             }
             else
-                pixelsArray.setPixel(x, y, 0, 0, 255, 255);
+                pixelsArray.setPixel(x, y, Graphics::Color(0, 0, 255, 255));
         }
     }
 

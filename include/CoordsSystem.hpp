@@ -14,22 +14,22 @@ struct Point
     //Point(Graphics::WindowPoint windowPoint) : x(windowPoint.x), y(windowPoint.y), z(0) {}
 };
 
-struct Direction
+class Sphere;
+
+struct PixelVector
 {
     int dx, dy, dz;
 
-    Direction(int dx, int dy, int dz) : dx(dx), dy(dy), dz(dz) {}
+    PixelVector(int dx, int dy, int dz) : dx(dx), dy(dy), dz(dz) {}
 };
-
-class Sphere;
 
 class CoordsSystem
 {
     Point center_;
-    Direction coordsSteps_;
+    PixelVector coordsSteps_;
 
 public:
-    CoordsSystem(const Direction& coordsSteps, const Point& center) : 
+    CoordsSystem(const PixelVector& coordsSteps, const Point& center) : 
         coordsSteps_(coordsSteps), center_(center) {}
 
     void moveCenter (const Graphics::WindowPoint& delta);
