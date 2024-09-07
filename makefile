@@ -28,7 +28,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 override CFLAGS += $(COMMONINC)
 override CFLAGS += $(LIB_LINK)
 
-CPPSRC = src/CoordsSystem.cpp src/Events.cpp src/GraphicsWindow.cpp src/PixelsArray.cpp src/Sphere.cpp src/main.cpp src/Vector.cpp src/LightSource.cpp
+CPPSRC = src/CoordsSystem.cpp src/Events.cpp src/GraphicsWindow.cpp src/PixelsArray.cpp src/Sphere.cpp src/main.cpp src/Vector.cpp src/LightSource.cpp src/Camera.cpp
 
 CPPOBJ := $(addprefix $(OUT_O_DIR)/,$(CPPSRC:.cpp=.o))
 DEPS = $(CPPOBJ:.o=.d)

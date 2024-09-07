@@ -46,30 +46,6 @@ Point CoordsSystem::getPosInCoordsSystem(const Graphics::WindowPoint& point) con
                  0);
 }
 
-void CoordsSystem::drawSphere(Graphics::Window& window, const Sphere& sphere) const
-{
-    Graphics::PixelsArray pixelsArray{window.width_, window.height_};
-
-    for (unsigned int y = 0; y < window.height_; ++y)
-    {
-        for (unsigned int x = 0; x < window.width_; ++x)
-        {
-            // TODO: function - setPixel
-
-            double z = sphere.calcZ(x, y);
-            if (std::isfinite(z))
-            {
-                Point point{x, y, z};
-                pixelsArray.setPixel(x, y, Graphics::Color(10 * z, 0, 0, 255));
-            }
-            else
-                pixelsArray.setPixel(x, y, Graphics::Color(0, 0, 255, 255));
-        }
-    }
-
-    window.drawPixels(pixelsArray);
-}
-
 double getDistance3D(const Point& p1, const Point& p2)
 {
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + 

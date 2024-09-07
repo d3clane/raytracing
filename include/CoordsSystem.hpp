@@ -35,8 +35,6 @@ public:
     void moveCenter (const Graphics::WindowPoint& delta);
     void changeScale(const int delta);
 
-    void drawSphere(Graphics::Window& window, const Sphere& sphere) const;
-
     Graphics::WindowPoint getPosInWindow(const Point& point) const;
 
     Point getPosInCoordsSystem(const Graphics::WindowPoint& point) const;

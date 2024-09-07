@@ -3,6 +3,7 @@
 #include "Events.hpp"
 #include "LightSource.hpp"
 #include "PixelsArray.hpp"
+#include "Camera.hpp"
 
 int main()
 {
@@ -15,6 +16,8 @@ int main()
     Scene::LightSource lightSource2{Scene::Point{800, 300, 100}, Graphics::Color(255, 255, 255, 255)};
     Scene::LightSource lightSource3{Scene::Point{0, 600, 100}, Graphics::Color(255, 255, 255, 255)};
 
+    Scene::Camera camera{Scene::Point{0, 0, 0}};
+
     while (window.isOpen())
     {
         Graphics::Event event;
@@ -26,13 +29,13 @@ int main()
 
         window.clear();
         
-        Graphics::PixelsArray pixelsArray{window.width_, window.height_};
+        Graphics::PixelsArray pixelsArray{window.width_, window.height_, Graphics::WindowPoint{0, 0}};
 
         lightSource1.highlightSphere(coords, sphere, pixelsArray);
         lightSource2.highlightSphere(coords, sphere, pixelsArray);
         lightSource3.highlightSphere(coords, sphere, pixelsArray);
 
-        window.drawPixels(pixelsArray);
+        camera.drawPixels(window, coords, pixelsArray);
         window.display();
     }
 }

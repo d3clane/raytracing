@@ -32,6 +32,8 @@ public:
         rgbaColors[(int)ColorId::ALPHA] = alpha;
     }
 
+    Color() : Color(0, 0, 0, 255) {}
+
     inline uint8_t red()   const { return rgbaColors[(int)ColorId::RED   ]; }
     inline uint8_t green() const { return rgbaColors[(int)ColorId::GREEN ]; }
     inline uint8_t blue()  const { return rgbaColors[(int)ColorId::BLUE  ]; }
@@ -45,10 +47,12 @@ class PixelsArray
 {
 private:
     sf::Uint8* pixels_;
+
+    Graphics::WindowPoint topLeftPixelWindowPos_;
     unsigned int width_, height_;
 
 public:
-    PixelsArray(unsigned int width, unsigned int height);
+    PixelsArray(unsigned int width, unsigned int height, const Graphics::WindowPoint& topLeftPixelPos);
     PixelsArray(const PixelsArray& pixels);
     ~PixelsArray();
 
@@ -58,8 +62,17 @@ public:
     void  setPixel(unsigned int x, unsigned int y, const Color& color);
     Color getPixel(unsigned int x, unsigned int y) const;
 
+    void moveImage   (Graphics::WindowVector direction);
+    void moveImageByX(int dx);
+    void moveImageByY(int dy);
+
     inline unsigned int width()  const { return width_;  }
     inline unsigned int height() const { return height_; }
+
+    inline Graphics::WindowPoint middlePixelWindowPos() const
+    {
+        return topLeftPixelWindowPos_ + Graphics::WindowPoint{width_ / 2, height_ / 2};
+    }
 
     friend void Window::drawPixels(const PixelsArray& pixels);
 };

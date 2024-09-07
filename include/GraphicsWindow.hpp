@@ -15,6 +15,23 @@ struct WindowPoint
     WindowPoint(int x, int y) : x(x), y(y) {}
 };
 
+inline WindowPoint operator +(const WindowPoint& left, const WindowPoint& right)
+{
+    return WindowPoint(left.x + right.x, left.y + right.y);
+}
+
+inline WindowPoint operator -(const WindowPoint& point) 
+{   
+    return WindowPoint(-point.x, -point.y);
+}
+
+inline WindowPoint operator -(const WindowPoint& left, const WindowPoint& right)
+{
+    return WindowPoint(left.x - right.x, left.y - right.y);
+}
+
+using WindowVector = WindowPoint;
+
 struct WindowLine
 {
     WindowPoint start, end;
