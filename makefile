@@ -33,7 +33,7 @@ override CFLAGS += $(LIB_INC)
 
 CPPSRC = src/Scene/CoordsSystem.cpp src/Graphics/Events.cpp src/Graphics/GraphicsWindow.cpp src/Graphics/PixelsArray.cpp \
 		 src/Scene/Sphere.cpp src/main.cpp src/Scene/Vector.cpp src/Scene/LightSource.cpp src/Scene/Camera.cpp \
-		 src/Graphics/Sprite.cpp src/Graphics/Texture.cpp src/Gui/Button.cpp
+		 src/Graphics/Sprite.cpp src/Graphics/Texture.cpp src/Gui/Button.cpp src/Graphics/Mouse.cpp src/Gui/Button.cpp
 
 CPPOBJ := $(addprefix $(OUT_O_DIR)/,$(CPPSRC:.cpp=.o))
 DEPS = $(CPPOBJ:.o=.d)

@@ -1,5 +1,7 @@
 #include "Gui/Button.hpp"
 
+#include "Graphics/Mouse.hpp"
+
 namespace Gui
 {
 
@@ -7,24 +9,39 @@ Button::Button(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
 ) : topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state) {}
 
-bool Button::hovered(const Graphics::Event& event) const
+bool Button::hovered(const Graphics::Window& window) const
 {
-    if (event.type != Graphics::Event::EventType::MouseMove) return false;
-    
-    
+    Graphics::WindowPoint mousePos = Graphics::Mouse::getPosition(window);
 
+    if (topLeft_.x <= mousePos.x && mousePos.x <= topLeft_.x + width_ &&
+        topLeft_.y <= mousePos.y && mousePos.y <= topLeft_.y + height_)
+        return true;
+
+    return false;
 }
 
-void Button::interact()
+void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 {
-    if (!showing_) return;
-
-
-    switch (state_)
+    if (!hovered(window))
     {
-        case State::Normal:
-            
+        onUnhover(window);
+        return;
     }
+
+    switch (event.type)
+    {
+        case Graphics::Event::EventType::MouseButtonPressed:
+            onPress(window);
+            break;
+
+        case Graphics::Event::EventType::MouseButtonReleased:
+            onRelease(window);
+            break;
+        
+        default:
+            onHover(window);
+            break;
+    }    
 }
 
 } // namespace Gui

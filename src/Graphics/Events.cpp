@@ -3,6 +3,6 @@
 namespace Graphics
 {
 
-Event::Event() : type(EventType::None), mousePos(0, 0), keyCode(KeyCode::None) {}
+Event::Event() : type(EventType::None) {}
 
 } // namespace Graphics

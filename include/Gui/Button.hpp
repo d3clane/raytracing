@@ -22,13 +22,13 @@ public:
         const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
     );
 
-    virtual void onPress  () = 0;
-    virtual void onRelease() = 0;
-    virtual void onHover  () = 0;
-    virtual void onUnhover() = 0;
+    virtual void onPress  (Graphics::Window& window) = 0;
+    virtual void onRelease(Graphics::Window& window) = 0;
+    virtual void onHover  (Graphics::Window& window) = 0;
+    virtual void onUnhover(Graphics::Window& window) = 0;
 
-    bool hovered(const Graphics::Event& event) const;
-    void interact();
+    bool hovered(const Graphics::Window& window) const;
+    void interact(Graphics::Window& window, const Graphics::Event& event);
 
 private:
     Graphics::WindowPoint topLeft_;

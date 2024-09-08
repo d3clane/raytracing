@@ -3,31 +3,10 @@
 #include "Graphics/PixelsArray.hpp"
 #include "Graphics/Sprite.hpp"
 
+#include "PrivateConverters.hpp"
+
 namespace Graphics
 {
-
-namespace 
-{
-
-Event::KeyCode convertSfKeyCodeToKeyCode(sf::Keyboard::Key sfKeyCode);
-
-Event::KeyCode convertSfKeyCodeToKeyCode(sf::Keyboard::Key sfKeyCode)
-{
-    switch (sfKeyCode)
-    {
-        case sf::Keyboard::Key::W:          return Event::KeyCode::W;
-        case sf::Keyboard::Key::S:          return Event::KeyCode::S;
-        case sf::Keyboard::Key::A:          return Event::KeyCode::A;
-        case sf::Keyboard::Key::D:          return Event::KeyCode::D;
-        case sf::Keyboard::Key::Q:          return Event::KeyCode::Q;
-        case sf::Keyboard::Key::E:          return Event::KeyCode::E;
-        default:                            return Event::KeyCode::None;
-    }
-
-    return Event::KeyCode::None;
-}
-
-} // Anonymous namespace
 
 Window::Window(int width, int height, const char* title) : 
         window_(sf::VideoMode(width, height), title), height_(height), width_(width)
@@ -113,7 +92,17 @@ bool Window::pollEvent(Event& event)
             event.type = Event::EventType::MouseMove;
             event.mousePos = WindowPoint(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
             break;
-        
+
+        case sf::Event::MouseButtonPressed:
+            event.type = Event::EventType::MouseButtonPressed;
+            event.mouseButton = convertSfButtonToButton(event.sfEvent.mouseButton.button);
+            break;
+
+        case sf::Event::MouseButtonReleased:
+            event.type = Event::EventType::MouseButtonReleased;
+            event.mouseButton = convertSfButtonToButton(event.sfEvent.mouseButton.button);
+            break;
+            
         default:
             event.type = Event::EventType::None;
             break;

@@ -9,11 +9,9 @@ namespace Graphics
 
 class Event
 {
-private:
     sf::Event sfEvent;
     
 public:
-
     enum class EventType
     {
         None,
@@ -21,6 +19,8 @@ public:
         Closed,
         KeyPressed,
         MouseMove,
+        MouseButtonPressed,
+        MouseButtonReleased
     };
 
     enum class KeyCode
@@ -37,11 +37,17 @@ public:
     };
 
     EventType type;
-    WindowPoint mousePos;
-    KeyCode keyCode;
+
+    union
+    {
+        WindowPoint mousePos;
+        Mouse::Button mouseButton;
+        KeyCode keyCode;
+    };
+
 
     Event();
-
+    
     friend bool Window::pollEvent(Event& event);
 };
 
