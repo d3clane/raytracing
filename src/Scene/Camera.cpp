@@ -1,5 +1,5 @@
-#include "Camera.hpp"
-#include "PixelsArray.hpp"
+#include "Scene/Camera.hpp"
+#include "Graphics/PixelsArray.hpp"
 
 namespace Scene
 {

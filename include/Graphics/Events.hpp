@@ -2,7 +2,7 @@
 #define EVENTS_HPP
 
 #include <SFML/Graphics.hpp>
-#include "GraphicsWindow.hpp"
+#include "Graphics/GraphicsWindow.hpp"
 
 namespace Graphics
 {

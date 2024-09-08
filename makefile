@@ -1,22 +1,25 @@
 CC := g++
 
-CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O3 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations	  \
+CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O3 -Wall -Wextra -Weffc++ \
 		   -Wc++14-compat -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts 		  \
-		   -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal      \
-		   -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wlogical-op \
-		   -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Winit-self \
-		   -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel 		  \
-		   -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-methods 				  \
-		   -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand 		  \
-		   -Wundef -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros -Wno-literal-suffix   \
+		   -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal      \
+		   -Wformat-nonliteral -Wformat-security -Wformat=2 \
+		   -Wnon-virtual-dtor -Woverloaded-virtual -Wpacked -Wpointer-arith -Winit-self \
+		   -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo		  \
+		   -Wstrict-overflow=2 \
+		   -Wsuggest-override -Wswitch-default -Wswitch-enum 		  \
+		   -Wundef -Wunreachable-code -Wunused -Wvariadic-macros   \
 		   -Wno-missing-field-initializers -Wno-narrowing -Wno-old-style-cast -Wno-varargs 			  \
 		   -Wstack-protector -fcheck-new -fsized-deallocation -fstack-protector -fstrict-overflow 	  \
-		   -fno-omit-frame-pointer -Wlarger-than=8192 -Wstack-usage=8192 -pie  						  \
-		   -fPIE -Werror=vla --param max-inline-insns-single=1000									  
+		   -fno-omit-frame-pointer -Wlarger-than=8192 -Wstack-protector  						  \
+		   -fPIE -Werror=vla									  
 
 OUT_O_DIR := build
 COMMONINC := -I./include
-LIB_LINK  := -I/opt/homebrew/Cellar/sfml/2.6.1/include -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system
+LIB_INC   := -isystem/opt/homebrew/Cellar/sfml/2.6.1/include
+LIB_LINK  := -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-graphics -lsfml-window -lsfml-system
+
+LDFLAGS   := $(LIB_LINK)
 
 PROGRAM_DIR  := $(OUT_O_DIR)/bin
 PROGRAM_NAME := sphere.out
@@ -26,9 +29,10 @@ TESTS = ./Tests
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 override CFLAGS += $(COMMONINC)
-override CFLAGS += $(LIB_LINK)
+override CFLAGS += $(LIB_INC)
 
-CPPSRC = src/CoordsSystem.cpp src/Events.cpp src/GraphicsWindow.cpp src/PixelsArray.cpp src/Sphere.cpp src/main.cpp src/Vector.cpp src/LightSource.cpp src/Camera.cpp
+CPPSRC = src/Scene/CoordsSystem.cpp src/Graphics/Events.cpp src/Graphics/GraphicsWindow.cpp src/Graphics/PixelsArray.cpp \
+		 src/Scene/Sphere.cpp src/main.cpp src/Scene/Vector.cpp src/Scene/LightSource.cpp src/Scene/Camera.cpp
 
 CPPOBJ := $(addprefix $(OUT_O_DIR)/,$(CPPSRC:.cpp=.o))
 DEPS = $(CPPOBJ:.o=.d)
@@ -38,7 +42,7 @@ all: $(PROGRAM_DIR)/$(PROGRAM_NAME)
 
 $(PROGRAM_DIR)/$(PROGRAM_NAME): $(CPPOBJ)
 	@mkdir -p $(@D)
-	$(CC) $^ -o $@ $(CFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(CPPOBJ) : $(OUT_O_DIR)/%.o : %.cpp
 	@mkdir -p $(@D)

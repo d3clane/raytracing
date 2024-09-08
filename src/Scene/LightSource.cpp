@@ -1,8 +1,8 @@
-#include "GraphicsWindow.hpp"
-#include "CoordsSystem.hpp"
-#include "LightSource.hpp"
-#include "Sphere.hpp"
-#include "Vector.hpp"
+#include "Graphics/GraphicsWindow.hpp"
+#include "Scene/CoordsSystem.hpp"
+#include "Scene/LightSource.hpp"
+#include "Scene/Sphere.hpp"
+#include "Scene/Vector.hpp"
 
 namespace Scene
 {

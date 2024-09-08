@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "CoordsSystem.hpp"
+#include "Scene/CoordsSystem.hpp"
 
 namespace Scene
 {

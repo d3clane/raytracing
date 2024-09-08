@@ -1,9 +1,10 @@
-#include "GraphicsWindow.hpp"
-#include "Sphere.hpp"
-#include "Events.hpp"
-#include "LightSource.hpp"
-#include "PixelsArray.hpp"
-#include "Camera.hpp"
+#include "Graphics/GraphicsWindow.hpp"
+#include "Graphics/Events.hpp"
+#include "Graphics/PixelsArray.hpp"
+
+#include "Scene/LightSource.hpp"
+#include "Scene/Sphere.hpp"
+#include "Scene/Camera.hpp"
 
 int main()
 {

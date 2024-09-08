@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-#include "CoordsSystem.hpp"
+#include "Scene/CoordsSystem.hpp"
 
 namespace Scene
 {

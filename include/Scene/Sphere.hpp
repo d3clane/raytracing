@@ -1,8 +1,9 @@
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
 
-#include "CoordsSystem.hpp"
-#include "PixelsArray.hpp"
+#include "Graphics/PixelsArray.hpp"
+
+#include "Scene/CoordsSystem.hpp"
 
 namespace Scene
 {

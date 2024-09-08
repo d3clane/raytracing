@@ -1,9 +1,9 @@
 #ifndef LIGHT_SOURCE_HPP
 #define LIGHT_SOURCE_HPP
 
-#include "CoordsSystem.hpp"
-#include "PixelsArray.hpp"
-#include "Camera.hpp"
+#include "Graphics/PixelsArray.hpp"
+#include "Scene/CoordsSystem.hpp"
+#include "Scene/Camera.hpp"
 
 namespace Scene
 {

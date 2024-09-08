@@ -1,7 +1,7 @@
 #ifndef COORDS_SYSTEM_HPP
 #define COORDS_SYSTEM_HPP
 
-#include "GraphicsWindow.hpp"
+#include "Graphics/GraphicsWindow.hpp"
 
 namespace Scene
 {

@@ -1,8 +1,6 @@
-#include <iostream>
-
-#include "CoordsSystem.hpp"
-#include "PixelsArray.hpp"
-#include "Sphere.hpp"
+#include "Graphics/PixelsArray.hpp"
+#include "Scene/CoordsSystem.hpp"
+#include "Scene/Sphere.hpp"
 
 namespace Scene
 {

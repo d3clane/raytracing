@@ -1,7 +1,7 @@
 #include <cassert>
 #include <cmath>
 
-#include "Vector.hpp"
+#include "Scene/Vector.hpp"
 
 namespace Scene
 {

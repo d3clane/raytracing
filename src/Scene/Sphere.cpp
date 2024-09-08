@@ -1,4 +1,4 @@
-#include "Sphere.hpp"
+#include "Scene/Sphere.hpp"
 
 namespace Scene
 {

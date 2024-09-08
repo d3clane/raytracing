@@ -1,6 +1,6 @@
-#include "Events.hpp"
-#include "GraphicsWindow.hpp"
-#include "PixelsArray.hpp"
+#include "Graphics/Events.hpp"
+#include "Graphics/GraphicsWindow.hpp"
+#include "Graphics/PixelsArray.hpp"
 
 namespace Graphics
 {

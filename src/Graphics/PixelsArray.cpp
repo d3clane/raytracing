@@ -1,4 +1,4 @@
-#include "PixelsArray.hpp"
+#include "Graphics/PixelsArray.hpp"
 
 namespace Graphics
 {
