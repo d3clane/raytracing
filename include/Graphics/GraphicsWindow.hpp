@@ -2,6 +2,7 @@
 #define GRAPHICS_HPP
 
 #include <SFML/Graphics.hpp>
+#include "Mouse.hpp"
 
 namespace Graphics
 {
@@ -66,6 +67,8 @@ public:
     unsigned int getHeight() const;
 
     bool pollEvent(Event& event);
+
+    friend WindowPoint Mouse::getPosition(const Window& window);
 };
 
 } // Graphics
