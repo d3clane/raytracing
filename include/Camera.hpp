@@ -13,6 +13,8 @@ class Camera
 public:
     Camera(const Point& pos) : pos_(pos) {}
 
+    inline Point pos() const { return pos_; }
+    
     void drawPixels(Graphics::Window& window, const CoordsSystem& coordsSystem, 
                     const Graphics::PixelsArray& pixelsArray) const;
 };

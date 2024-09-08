@@ -26,11 +26,11 @@ struct PixelVector
 class CoordsSystem
 {
     Point center_;
-    PixelVector coordsSteps_;
+    unsigned int stepInPixels_;
 
 public:
-    CoordsSystem(const PixelVector& coordsSteps, const Point& center) : 
-        coordsSteps_(coordsSteps), center_(center) {}
+    CoordsSystem(const unsigned int stepInPixels, const Point& center) : 
+        stepInPixels_(stepInPixels), center_(center) {}
 
     void moveCenter (const Graphics::WindowPoint& delta);
     void changeScale(const int delta);

@@ -26,20 +26,28 @@ uint8_t mulColor(uint8_t col, double coeff, uint8_t maxColorValue)
 
 } // Anonymous namespace
 
-Color Color::operator + (const Color& other) const
+Color Color::operator +(const Color& other) const
 {
-    return Color(addColors(red  (),  other.red  (), maxColorValue_), 
-                 addColors(green(),  other.green(), maxColorValue_),
-                 addColors(blue (),  other.blue (), maxColorValue_), 
-                 std::max (alpha(),  other.alpha()));
+    return Color(addColors(red_  ,  other.red_  , maxColorValue_), 
+                 addColors(green_,  other.green_, maxColorValue_),
+                 addColors(blue_ ,  other.blue_ , maxColorValue_), 
+                 std::max (alpha_,  other.alpha_));
 
 }
-Color Color::operator * (const double& coeff) const
+Color Color::operator *(const double& coeff) const
 {
-    return Color(mulColor(red  (), coeff, maxColorValue_),
-                 mulColor(green(), coeff, maxColorValue_),
-                 mulColor(blue (), coeff, maxColorValue_),
-                 alpha());
+    return Color(mulColor(red_  , coeff, maxColorValue_),
+                 mulColor(green_, coeff, maxColorValue_),
+                 mulColor(blue_ , coeff, maxColorValue_),
+                 alpha_);
+}
+
+Color Color::operator *(const Color& other) const
+{
+    return Color(mulColor(red_  , (double)other.red_   / maxColorValue_, maxColorValue_),
+                 mulColor(green_, (double)other.green_ / maxColorValue_, maxColorValue_),
+                 mulColor(blue_ , (double)other.blue_  / maxColorValue_, maxColorValue_),
+                 std::max(alpha_, other.alpha_));
 }
 
 PixelsArray::PixelsArray(
@@ -53,10 +61,10 @@ PixelsArray::PixelsArray(
         for (unsigned int x = 0; x < width_; ++x)
         {
             Color defaultColor{};
-            pixels_[getPixelPos(x, y, width_) + 0] = defaultColor.red();
-            pixels_[getPixelPos(x, y, width_) + 1] = defaultColor.green();
-            pixels_[getPixelPos(x, y, width_) + 2] = defaultColor.blue();
-            pixels_[getPixelPos(x, y, width_) + 3] = defaultColor.alpha();
+            pixels_[getPixelPos(x, y, width_) + 0] = defaultColor.red_  ;
+            pixels_[getPixelPos(x, y, width_) + 1] = defaultColor.green_;
+            pixels_[getPixelPos(x, y, width_) + 2] = defaultColor.blue_ ;
+            pixels_[getPixelPos(x, y, width_) + 3] = defaultColor.alpha_;
         }
     }
 }
@@ -91,10 +99,10 @@ void PixelsArray::setPixel(unsigned int x, unsigned int y, const Color& color)
 
     size_t pixelPos = getPixelPos(x, y, width_);
 
-    pixels_[pixelPos + 0] = color.red();
-    pixels_[pixelPos + 1] = color.green();
-    pixels_[pixelPos + 2] = color.blue();
-    pixels_[pixelPos + 3] = color.alpha();
+    pixels_[pixelPos + 0] = color.red_  ;
+    pixels_[pixelPos + 1] = color.green_;
+    pixels_[pixelPos + 2] = color.blue_ ;
+    pixels_[pixelPos + 3] = color.alpha_;
 }
 
 Color PixelsArray::getPixel(unsigned int x, unsigned int y) const

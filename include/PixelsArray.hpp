@@ -12,35 +12,18 @@ static const size_t kBytesPerPixel = 4;
 struct Color
 {
 private:
-    enum class ColorId
-    {
-        RED,
-        GREEN,
-        BLUE,
-        ALPHA,
-    };
+    static const uint8_t maxColorValue_ = 255;
 
-    const uint8_t maxColorValue_ = 255;
 public:
-    uint8_t rgbaColors[kBytesPerPixel];
+    uint8_t red_, green_, blue_, alpha_;
 
-    Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
-    {
-        rgbaColors[(int)ColorId::RED]   = red;
-        rgbaColors[(int)ColorId::GREEN] = green;
-        rgbaColors[(int)ColorId::BLUE]  = blue;
-        rgbaColors[(int)ColorId::ALPHA] = alpha;
-    }
-
+    Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) noexcept
+        : red_{red}, green_{green}, blue_{blue}, alpha_{alpha} {}
     Color() : Color(0, 0, 0, 255) {}
 
-    inline uint8_t red()   const { return rgbaColors[(int)ColorId::RED   ]; }
-    inline uint8_t green() const { return rgbaColors[(int)ColorId::GREEN ]; }
-    inline uint8_t blue()  const { return rgbaColors[(int)ColorId::BLUE  ]; }
-    inline uint8_t alpha() const { return rgbaColors[(int)ColorId::ALPHA ]; }
-
-    Color operator + (const Color& other) const;
-    Color operator * (const double& coeff) const;
+    Color operator +(const Color& other)  const;
+    Color operator *(const double& coeff) const;
+    Color operator *(const Color& other)  const;
 };
 
 class PixelsArray

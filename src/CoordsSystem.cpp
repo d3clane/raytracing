@@ -10,9 +10,9 @@ namespace Scene
 namespace 
 {
 
-void changeOneArgScale(int& step, const int delta);
+void changeOneArgScale(unsigned int& step, const int delta);
 
-void changeOneArgScale(int& step, const int delta)
+void changeOneArgScale(unsigned int& step, const int delta)
 {
     if (delta < 0 && step <= -delta) step = 1;
     else step += delta;
@@ -22,7 +22,7 @@ void changeOneArgScale(int& step, const int delta)
 
 using Graphics::WindowLine;
 
-void CoordsSystem::moveCenter (const Graphics::WindowPoint& delta)
+void CoordsSystem::moveCenter(const Graphics::WindowPoint& delta)
 {
     center_.x += delta.x;
     center_.y += delta.y;
@@ -30,19 +30,19 @@ void CoordsSystem::moveCenter (const Graphics::WindowPoint& delta)
 
 void CoordsSystem::changeScale(const int delta)
 {
-    changeOneArgScale(coordsSteps_.dx, delta);
-    changeOneArgScale(coordsSteps_.dy, delta);
+    changeOneArgScale(stepInPixels_, delta);
+    changeOneArgScale(stepInPixels_, delta);
 }
 
 Graphics::WindowPoint CoordsSystem::getPosInWindow(const Point& point) const
 {
-    return Graphics::WindowPoint(center_.x + point.x * coordsSteps_.dx, center_.y + point.y * coordsSteps_.dy);
+    return Graphics::WindowPoint(center_.x + point.x * stepInPixels_, center_.y + point.y * stepInPixels_);
 }
 
 Point CoordsSystem::getPosInCoordsSystem(const Graphics::WindowPoint& point) const
 {
-    return Point((point.x - center_.x) / coordsSteps_.dx, 
-                 (point.y - center_.y) / coordsSteps_.dy, 
+    return Point((point.x - center_.x) / stepInPixels_, 
+                 (point.y - center_.y) / stepInPixels_, 
                  0);
 }
 

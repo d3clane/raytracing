@@ -17,15 +17,19 @@ struct Vector
         dx(end.x - begin.x), dy(end.y - begin.y), dz(end.z - begin.z) {}
 
     double length() const;
-
-    Vector operator - () const;
-    Vector operator + (const Vector& other) const;
-    Vector operator - (const Vector& other) const;
-    Vector operator * (const double coeff)  const;
-    Vector operator / (const double coeff)  const;
-
-    double operator ^ (const Vector& other) const;
+    void   length(const double newLength);
+    
+    Vector reflectRelatively(const Vector& pivot) const;
+    Vector getNormalizedVector() const;
 };
+
+Vector operator -(const Vector& self);
+Vector operator +(const Vector& self, const Vector& other);
+Vector operator -(const Vector& self, const Vector& other);
+Vector operator *(const Vector& self, const double coeff);
+Vector operator *(const double coeff, const Vector& self);
+Vector operator /(const Vector& self, const double coeff);
+double operator ^(const Vector& self, const Vector& other);
 
 double cos(const Vector& v1, const Vector& v2);
 

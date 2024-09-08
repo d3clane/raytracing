@@ -10,9 +10,43 @@ namespace Scene
 namespace 
 {
 
-Graphics::Color calcSpherePixelColor(const CoordsSystem& coordsSystem, const Sphere& sphere, 
-                                     const Graphics::WindowPoint& pixelPos, const Graphics::Color& pixelColor,
-                                     const Point& lightSourcePos, const Graphics::Color& lightSourceColor)
+inline Graphics::Color calcLambertColor(
+    const Point& spherePointPos, const Sphere& sphere,
+    const Point& lightPos, const Graphics::Color& lightColor,
+    const Graphics::Color& ambientColor
+)
+{
+    Vector normal{sphere.center(), spherePointPos};
+    Vector lightVector{spherePointPos, lightPos};
+
+    double cosAngle = cos(normal, lightVector);
+    if (cosAngle < 0) cosAngle = 0;
+
+    return ambientColor * sphere.color() + sphere.color() * lightColor * cosAngle;
+}
+
+inline Graphics::Color calcBlinkColor(
+    const Point& spherePointPos, const Sphere& sphere, 
+    const Point& lightSourcePos, const Graphics::Color& lightSourceColor,
+    const Camera& camera
+)
+{
+    Vector normal{sphere.center(), spherePointPos};
+    Vector lightVector{spherePointPos, lightSourcePos};
+    Vector viewVector{spherePointPos, camera.pos()};
+    Vector reflected = lightVector.reflectRelatively(normal);
+
+    double cosAngle = cos(reflected, viewVector);
+    if (cosAngle < 0) cosAngle = 0;
+
+    return lightSourceColor * std::pow(cosAngle, 25); // magic 25
+}
+
+Graphics::Color calcSpherePixelColor(
+    const CoordsSystem& coordsSystem, const Sphere& sphere,
+    const Camera& camera, const Graphics::WindowPoint& pixelPos, const Graphics::Color& pixelColor,
+    const Point& lightSourcePos, const Graphics::Color& lightSourceColor
+)
 {
     double z = sphere.calcZ(pixelPos, coordsSystem);
 
@@ -23,18 +57,25 @@ Graphics::Color calcSpherePixelColor(const CoordsSystem& coordsSystem, const Sph
     Vector normal{sphere.center(), spherePointPos};
     Vector lightVector{spherePointPos, lightSourcePos};
 
-    double cosAngle = cos(normal, lightVector);
+    Graphics::Color resultColor = pixelColor;
+    
+    Graphics::Color ambientColor = Graphics::Color{10, 10, 10, 255}; // shadow
+    resultColor = resultColor + calcLambertColor(
+        spherePointPos, sphere, lightSourcePos, lightSourceColor, ambientColor
+    );
 
-    if (cosAngle >= 0)
-        return pixelColor + sphere.color() * cosAngle;
-    else
-        return pixelColor;
+    resultColor = resultColor + calcBlinkColor(
+        spherePointPos, sphere, lightSourcePos, lightSourceColor, camera
+    );
+    
+    return resultColor;
 }
 
 } // anonymous namespace
 
-void LightSource::highlightSphere(const CoordsSystem& coordsSystem, const Sphere& sphere, 
-                                  Graphics::PixelsArray& pixels) const
+void LightSource::highlightSphere(
+    const CoordsSystem& coordsSystem, const Sphere& sphere, const Camera& camera, Graphics::PixelsArray& pixels
+) const
 {
     unsigned int width  = pixels.width();
     unsigned int height = pixels.height();
@@ -43,9 +84,14 @@ void LightSource::highlightSphere(const CoordsSystem& coordsSystem, const Sphere
     {
         for (unsigned int x = 0; x < width; ++x)
         {
-            pixels.setPixel(x, y, 
-                calcSpherePixelColor(coordsSystem, sphere, Graphics::WindowPoint{x, y}, 
-                                     pixels.getPixel(x, y), position_, color_));
+            pixels.setPixel(
+                x, y, 
+                calcSpherePixelColor(
+                    coordsSystem, sphere, camera, 
+                    Graphics::WindowPoint{x, y}, pixels.getPixel(x, y), 
+                    position_, color_
+                )
+            );
         }
     }
 }

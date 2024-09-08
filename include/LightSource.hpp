@@ -3,6 +3,7 @@
 
 #include "CoordsSystem.hpp"
 #include "PixelsArray.hpp"
+#include "Camera.hpp"
 
 namespace Scene
 {
@@ -16,8 +17,10 @@ public:
     LightSource(const Point& position, const Graphics::Color& color) :
         position_(position), color_(color) {}   
 
+    Graphics::Color color() const { return color_; }
+    
     void highlightSphere(const CoordsSystem& coordsSystem, const Sphere& sphere, 
-                         Graphics::PixelsArray& pixels) const;
+                         const Camera& camera, Graphics::PixelsArray& pixels) const;
 };
 
 } // Scene
