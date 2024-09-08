@@ -1,6 +1,7 @@
 #include "Graphics/Events.hpp"
 #include "Graphics/GraphicsWindow.hpp"
 #include "Graphics/PixelsArray.hpp"
+#include "Graphics/Sprite.hpp"
 
 namespace Graphics
 {
@@ -76,6 +77,11 @@ void Window::drawPixels(const PixelsArray& pixels)
     window_.draw(sprite);
 }
 
+void Window::drawSprite(const Sprite& sprite)
+{
+    window_.draw(sprite.sprite_);
+}
+
 unsigned int Window::getWidth () const
 {
     return width_;
@@ -88,9 +94,9 @@ unsigned int Window::getHeight() const
 
 bool Window::pollEvent(Event& event)
 {
-    bool result = window_.pollEvent(event.sfEvent);
+    bool anyEvent = window_.pollEvent(event.sfEvent);
 
-    event.mousePos = WindowPoint(event.sfEvent.mouseMove.x, event.sfEvent.mouseMove.y);
+    if (!anyEvent) return anyEvent;
 
     switch (event.sfEvent.type)
     {
@@ -113,7 +119,7 @@ bool Window::pollEvent(Event& event)
             break;
     }
 
-    return result;
+    return anyEvent;
 }
 
 } // Graphics

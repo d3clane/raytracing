@@ -40,6 +40,7 @@ struct WindowLine
 };
 
 class PixelsArray;
+class Sprite;
 
 class Window
 {
@@ -57,6 +58,7 @@ public:
 
     void drawLine  (WindowLine line);
     void drawPixels(const PixelsArray& pixels);
+    void drawSprite(const Sprite& sprite);
 
     void display();
 
