@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Graphics/GraphicsWindow.hpp"
-#include "Mouse.hpp"
+#include "Graphics/Mouse.hpp"
 
 #include "PrivateConverters.hpp"
 

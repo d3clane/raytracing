@@ -6,6 +6,8 @@
 #include "Scene/Sphere.hpp"
 #include "Scene/Camera.hpp"
 
+#include "Gui/SettingsButton.hpp"
+
 int main()
 {
     Graphics::Window window{800, 600, "RayTracing"};
@@ -18,6 +20,8 @@ int main()
     Scene::LightSource lightSource3{Scene::Point{800, 0, -200}, Graphics::Color(255, 255, 255, 255)};
 
     Scene::Camera camera{Scene::Point{400, 300, 500}};
+
+    Gui::SettingsButton settingsButton(Graphics::WindowPoint{400, 300}, 64, 32, true, Gui::SettingsButton::State::Normal);
 
     while (window.isOpen())
     {
@@ -37,6 +41,10 @@ int main()
         lightSource3.highlightSphere(coords, sphere, camera, pixelsArray);
 
         camera.drawPixels(window, coords, pixelsArray);
+
+        settingsButton.interact(window, event);
+        window.drawSprite(settingsButton);
+
         window.display();
     }
 }

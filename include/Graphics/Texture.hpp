@@ -13,9 +13,10 @@ class Texture
     sf::Texture texture_;
 
 public:
+    Texture() = default;
     Texture(unsigned int width, unsigned int height);
 
-    void loadFromFile(const std::string& filename);
+    bool loadFromFile(const std::string& filename);
 
     friend void Sprite::setTexture(const Texture& texture);
 };

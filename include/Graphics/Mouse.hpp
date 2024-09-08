@@ -6,7 +6,7 @@
 namespace Graphics
 {
 
-class WindowPoint;
+struct WindowPoint;
 class Window;
 
 namespace Mouse

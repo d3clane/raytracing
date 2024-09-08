@@ -3,6 +3,7 @@
 
 #include "Graphics/GraphicsWindow.hpp"
 #include "Graphics/Sprite.hpp"
+#include "Graphics/Texture.hpp"
 #include "Graphics/Events.hpp"
 
 namespace Gui
@@ -30,11 +31,13 @@ public:
     bool hovered(const Graphics::Window& window) const;
     void interact(Graphics::Window& window, const Graphics::Event& event);
 
-private:
+    operator Graphics::Sprite() const;
+protected:
     Graphics::WindowPoint topLeft_;
     unsigned int width_, height_;
 
-    Graphics::Sprite sprite_;
+    Graphics::Sprite  sprite_;
+    Graphics::Texture texture_;
     bool showing_;
     State state_;
 };

@@ -30,18 +30,20 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 
     switch (event.type)
     {
-        case Graphics::Event::EventType::MouseButtonPressed:
-            onPress(window);
-            break;
-
         case Graphics::Event::EventType::MouseButtonReleased:
             onRelease(window);
             break;
         
         default:
-            onHover(window);
+            if (state_ != State::Released)
+                onHover(window);
             break;
     }    
+}
+
+Button::operator Graphics::Sprite() const
+{
+    return sprite_;
 }
 
 } // namespace Gui
