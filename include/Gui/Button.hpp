@@ -16,6 +16,7 @@ public:
     {
         Normal,
         Released,
+        Pressed,
         Inactive,
     };
 
@@ -27,9 +28,10 @@ public:
     virtual void onRelease(Graphics::Window& window) = 0;
     virtual void onHover  (Graphics::Window& window) = 0;
     virtual void onUnhover(Graphics::Window& window) = 0;
+    
+    virtual void interact (Graphics::Window& window, const Graphics::Event& event);
 
     bool hovered(const Graphics::Window& window) const;
-    void interact(Graphics::Window& window, const Graphics::Event& event);
 
     operator Graphics::Sprite() const;
 protected:

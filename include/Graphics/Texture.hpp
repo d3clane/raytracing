@@ -16,7 +16,11 @@ public:
     Texture() = default;
     Texture(unsigned int width, unsigned int height);
 
-    bool loadFromFile(const std::string& filename);
+    bool loadFromFile(const char* filename);
+    
+    WindowVector getScale() const;
+
+    static Texture loadTexture(const char* filename);
 
     friend void Sprite::setTexture(const Texture& texture);
 };

@@ -10,15 +10,15 @@ class SettingsButton : public Button
 {  
 public:
     SettingsButton(
-        const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
-    ) : Button(topLeft, width, height, showing, state) {};
+        const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing
+    );
 
     virtual void onPress    (Graphics::Window& window);
     virtual void onRelease  (Graphics::Window& window);
     virtual void onHover    (Graphics::Window& window);
     virtual void onUnhover  (Graphics::Window& window);
-private:
-    void tmp(const char* fileName);
+
+    virtual void interact   (Graphics::Window& window, const Graphics::Event& event);
 };
 
 } // namespace Gui

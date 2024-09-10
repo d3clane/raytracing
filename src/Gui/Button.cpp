@@ -2,6 +2,8 @@
 
 #include "Graphics/Mouse.hpp"
 
+#include <iostream>
+
 namespace Gui
 {
 
@@ -31,18 +33,22 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
     switch (event.type)
     {
         case Graphics::Event::EventType::MouseButtonReleased:
+
             onRelease(window);
             break;
         
+        case Graphics::Event::EventType::MouseButtonPressed:
+            onPress(window);
+            break;
+        
         default:
-            if (state_ != State::Released)
-                onHover(window);
+            onHover(window);
             break;
     }    
 }
 
 Button::operator Graphics::Sprite() const
-{
+{ 
     return sprite_;
 }
 

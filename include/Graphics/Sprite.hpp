@@ -16,7 +16,11 @@ class Sprite
 
 public:
 
-    void setTexture(const Texture& texture);
+    void setTexture (const Texture& texture);
+    void setPosition(const WindowPoint& position);
+    void scale      (const float scaleX, const float scaleY);
+
+    WindowVector getScaleInPixels() const;
 
     friend void Window::drawSprite(const Sprite& sprite);
 };

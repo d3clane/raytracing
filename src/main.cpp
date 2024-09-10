@@ -21,7 +21,8 @@ int main()
 
     Scene::Camera camera{Scene::Point{400, 300, 500}};
 
-    Gui::SettingsButton settingsButton(Graphics::WindowPoint{400, 300}, 64, 32, true, Gui::SettingsButton::State::Normal);
+    Gui::SettingsButton settingsButton(Graphics::WindowPoint{400, 300}, 64, 32, true);
+    window.drawSprite(settingsButton);
 
     while (window.isOpen())
     {
@@ -43,7 +44,7 @@ int main()
         camera.drawPixels(window, coords, pixelsArray);
 
         settingsButton.interact(window, event);
-        window.drawSprite(settingsButton);
+        //window.drawSprite(settingsButton);
 
         window.display();
     }
