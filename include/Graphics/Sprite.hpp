@@ -20,6 +20,8 @@ public:
     void setPosition(const WindowPoint& position);
     void scale      (const float scaleX, const float scaleY);
 
+    void scaleInPixels(const WindowVector& scaleInPixels);
+
     WindowVector getScaleInPixels() const;
 
     friend void Window::drawSprite(const Sprite& sprite);

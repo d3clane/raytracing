@@ -26,7 +26,7 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 {
     if (!hovered(window))
     {
-        onUnhover(window);
+        onUnhover(window, event);
         return;
     }
 
@@ -34,15 +34,15 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
     {
         case Graphics::Event::EventType::MouseButtonReleased:
 
-            onRelease(window);
+            onRelease(window, event);
             break;
         
         case Graphics::Event::EventType::MouseButtonPressed:
-            onPress(window);
+            onPress(window, event);
             break;
         
         default:
-            onHover(window);
+            onHover(window, event);
             break;
     }    
 }
@@ -50,6 +50,26 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 Button::operator Graphics::Sprite() const
 { 
     return sprite_;
+}
+
+void ButtonsArray::addButton(Button* button)
+{
+    buttons_.push_back(button);
+}
+
+void ButtonsArray::drawButtons(Graphics::Window& window) const
+{
+    for (Button* button : buttons_)
+    {
+        if (button->showing())
+            window.drawSprite(*button);
+    }
+}
+
+void ButtonsArray::interactWithButtons(Graphics::Window& window, const Graphics::Event& event)
+{
+    for (Button* button : buttons_)
+        button->interact(window, event);
 }
 
 } // namespace Gui

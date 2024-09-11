@@ -22,6 +22,15 @@ void Sprite::scale(const float scaleX, const float scaleY)
     sprite_.scale(scaleX, scaleY);
 }
 
+void Sprite::scaleInPixels(const WindowVector& scaleInPixels)
+{
+    WindowVector currentScale = getScaleInPixels();
+    if (currentScale.x == 0 || currentScale.y == 0)
+        return;
+
+    sprite_.scale((double)scaleInPixels.x / currentScale.x, (double)scaleInPixels.y / currentScale.y);
+}
+
 WindowVector Sprite::getScaleInPixels() const
 {
     const sf::Texture* texture = sprite_.getTexture();

@@ -11,8 +11,7 @@ namespace Gui
 do                                                                                                  \
 {                                                                                                   \
     sprite_.setPosition(topLeft_);                                                                  \
-    sprite_.scale((double)width_  / sprite_.getScaleInPixels().x,                                    \
-                  (double)height_ / sprite_.getScaleInPixels().y);                                  \
+    sprite_.scaleInPixels({width_, height_});                                                       \
     showing_ = true;                                                                                \
                                                                                                     \
     window.drawSprite(sprite_);                                                                     \
@@ -36,19 +35,32 @@ do                                  \
     return sprite;   \
 } while(0)
 
-static Graphics::Sprite& loadSpriteNormal()
+Graphics::Sprite& loadSpriteNormal()
 {
     BASIC_LOADER("media/textures/settingsButtonNormal.png");
 }
 
-static Graphics::Sprite& loadSpriteRelease()
+Graphics::Sprite& loadSpriteRelease()
 {
     BASIC_LOADER("media/textures/settingsButtonRelease.jpeg");
 }
 
-static Graphics::Sprite& loadSpriteHover()
+Graphics::Sprite& loadSpriteHover()
 {
     BASIC_LOADER("media/textures/settingsButtonHover.png");
+}
+
+#undef BASIC_LOADER
+
+void doReleaseAction(
+    Graphics::Window& window, Graphics::Sprite& spriteToChange, 
+    ButtonsArray& buttons, const Graphics::Event& event
+)
+{
+    spriteToChange = loadSpriteRelease();   
+
+    buttons.drawButtons(window);
+    buttons.interactWithButtons(window, event);
 }
 
 } // anonymous namespace
@@ -59,48 +71,58 @@ SettingsButton::SettingsButton(
 {
     sprite_ = loadSpriteNormal();
     sprite_.setPosition(topLeft_);
-    sprite_.scale(width_ / sprite_.getScaleInPixels().x, height_ / sprite_.getScaleInPixels().y);
+    sprite_.scaleInPixels({width_, height_});
 }
 
-void SettingsButton::onPress(Graphics::Window& window) 
+void SettingsButton::addButtonInShowList(Button* button)
+{
+    buttons_.addButton(button);
+}
+
+void SettingsButton::drawButtons(Graphics::Window& window) const
+{
+    buttons_.drawButtons(window);
+}
+
+void SettingsButton::onPress(Graphics::Window& window, const Graphics::Event& event) 
 {
     return;
 }
 
-void SettingsButton::onRelease(Graphics::Window& window) 
+void SettingsButton::onRelease(Graphics::Window& window, const Graphics::Event& event) 
 {
-    if (state_ == State::Released) 
+    if (state_ == State::Released)
     {
-        state_ = State::Normal;
+        state_  = State::Normal;
         sprite_ = loadSpriteHover();
     }
     else
-    {                           
-        state_ = State::Released;
-        sprite_ = loadSpriteRelease();
+    {
+        state_  = State::Released;
+        doReleaseAction(window, sprite_, buttons_, event);
     }
 
     SET_SPRITE_CONDITIONS_AND_DRAW();
 }
 
-void SettingsButton::onHover(Graphics::Window& window) 
+void SettingsButton::onHover(Graphics::Window& window, const Graphics::Event& event) 
 {
-    if (state_ != State::Released) 
+    if (state_ != State::Released)
         sprite_ = loadSpriteHover();
-    else 
-        sprite_ = loadSpriteRelease();
+    else
+        doReleaseAction(window, sprite_, buttons_, event);
 
-    SET_SPRITE_CONDITIONS_AND_DRAW(); 
+    SET_SPRITE_CONDITIONS_AND_DRAW();
 }
 
-void SettingsButton::onUnhover(Graphics::Window& window) 
+void SettingsButton::onUnhover(Graphics::Window& window, const Graphics::Event& event) 
 {   
     switch (state_)
     {
         case State::Released:
-            sprite_ = loadSpriteRelease();
+            doReleaseAction(window, sprite_, buttons_, event);
             break;
-        
+
         case State::Normal:
             sprite_ = loadSpriteNormal();
             break;
@@ -117,18 +139,18 @@ void SettingsButton::interact(Graphics::Window& window, const Graphics::Event& e
 {
     if (!hovered(window))
     {
-        onUnhover(window);
+        onUnhover(window, event);
         return;
     }
 
     switch (event.type)
     {
         case Graphics::Event::EventType::MouseButtonReleased:
-            onRelease(window);
+            onRelease(window, event);
             break;
         
         default:
-            onHover(window);
+            onHover(window, event);
             break;
     }
 }
