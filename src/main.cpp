@@ -7,6 +7,7 @@
 #include "Scene/Camera.hpp"
 
 #include "Gui/SettingsButton.hpp"
+#include "Gui/MoveButton.hpp"
 
 int main()
 {
@@ -35,18 +36,39 @@ int main()
         buttonWidth, buttonHeight, true
     };
 
-    Gui::SettingsButton tmpButton1{
-        Graphics::WindowPoint{screenWidth - buttonWidth, buttonHeight}, 
-        buttonWidth, buttonHeight, true
+    const double moveStep = 2;
+    Gui::MoveButton moveRight{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{moveStep, 0, 0}, &sphere
+    };
+    Gui::MoveButton moveDown{
+        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{0, moveStep, 0}, &sphere
+    };
+    Gui::MoveButton moveLeft{
+        Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{-moveStep, 0.01, 0}, &sphere
+    };
+    Gui::MoveButton moveUp{
+        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{0, -moveStep, 0}, &sphere
     };
 
-    Gui::SettingsButton tmpButton2{
-        Graphics::WindowPoint{screenWidth - buttonWidth, 2 * buttonHeight}, 
-        buttonWidth, buttonHeight, true
+    Gui::MoveButton moveForward{
+        Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, -moveStep}, &sphere
+    };
+    Gui::MoveButton moveBackwards{
+        Graphics::WindowPoint{0, screenHeight - buttonHeight},
+        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, moveStep}, &sphere
     };
 
-    settingsButton.addButtonInShowList(&tmpButton1);
-    settingsButton.addButtonInShowList(&tmpButton2);
+    settingsButton.addButtonInShowList(&moveLeft);
+    settingsButton.addButtonInShowList(&moveRight);
+    settingsButton.addButtonInShowList(&moveUp);
+    settingsButton.addButtonInShowList(&moveDown);
+    settingsButton.addButtonInShowList(&moveForward);
+    settingsButton.addButtonInShowList(&moveBackwards);
 
     Gui::ButtonsArray firstLayerButtons;
     firstLayerButtons.addButton(&settingsButton);

@@ -20,10 +20,16 @@ void changeOneArgScale(unsigned int& step, const int delta)
 
 using Graphics::WindowLine;
 
-void CoordsSystem::moveCenter(const Graphics::WindowPoint& delta)
+Point operator +(const Point& self, const Point& other)
 {
-    center_.x += delta.x;
-    center_.y += delta.y;
+    return Point(self.x + other.x, self.y + other.y, self.z + other.z);
+}
+
+void CoordsSystem::moveCenter(const PixelVector& delta)
+{
+    center_.x += delta.dx;
+    center_.y += delta.dy;
+    center_.z += delta.dz;
 }
 
 void CoordsSystem::changeScale(const int delta)

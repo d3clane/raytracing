@@ -21,6 +21,8 @@ struct Vector
     
     Vector reflectRelatively(const Vector& pivot) const;
     Vector getNormalizedVector() const;
+
+    operator Point() const { return Point(dx, dy, dz); }
 };
 
 Vector operator -(const Vector& self);

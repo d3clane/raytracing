@@ -34,5 +34,9 @@ double Sphere::calcZ(const double x, const double y) const
     return sqrt(squareZ);
 }
 
+void Sphere::moveCenter(const Vector& delta)
+{
+    center_ = center_ + delta;
+}
 
 } // Scene

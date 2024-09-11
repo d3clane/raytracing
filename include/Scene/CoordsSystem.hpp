@@ -14,6 +14,8 @@ struct Point
     //Point(Graphics::WindowPoint windowPoint) : x(windowPoint.x), y(windowPoint.y), z(0) {}
 };
 
+Point operator +(const Point& self, const Point& other);
+
 class Sphere;
 
 struct PixelVector
@@ -32,7 +34,7 @@ public:
     CoordsSystem(const unsigned int stepInPixels, const Point& center) : 
         stepInPixels_(stepInPixels), center_(center) {}
 
-    void moveCenter (const Graphics::WindowPoint& delta);
+    void moveCenter (const PixelVector& delta);
     void changeScale(const int delta);
 
     Graphics::WindowPoint getPosInWindow(const Point& point) const;

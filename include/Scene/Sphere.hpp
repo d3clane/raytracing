@@ -4,6 +4,7 @@
 #include "Graphics/PixelsArray.hpp"
 
 #include "Scene/CoordsSystem.hpp"
+#include "Scene/Vector.hpp"
 
 namespace Scene
 {
@@ -13,6 +14,7 @@ class Sphere
     Point center_;
     double radius_;
     Graphics::Color color_;
+
 public:
     Sphere(const Point& center, const double radius, const Graphics::Color& color);
 
@@ -23,6 +25,8 @@ public:
     
     double calcZ(const Graphics::WindowPoint& windowPoint, const CoordsSystem& coordsSystem) const;
     double calcZ(const double x, const double y) const; 
+
+    void moveCenter(const Vector& delta);
 };
 
 } // Scene
