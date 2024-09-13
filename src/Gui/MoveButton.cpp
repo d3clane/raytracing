@@ -128,7 +128,7 @@ void MoveButton::onUnhover(Graphics::Window& window, const Graphics::Event& even
 
 void MoveButton::interact(Graphics::Window& window, const Graphics::Event& event)
 {
-    if (!hovered(window))
+    if (!isHovered(window))
     {
         onUnhover(window, event);
         return;

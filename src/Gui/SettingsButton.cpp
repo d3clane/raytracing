@@ -1,4 +1,6 @@
-#include "Gui/SettingsButton.hpp"
+#include "Gui/Button.hpp"
+
+#include "Other/TypeErasure.hpp"
 
 #include "Graphics/Texture.hpp"
 
@@ -6,6 +8,8 @@
 
 namespace Gui
 {
+
+using MyTypeErasure::TypeErasureData;
 
 #define SET_SPRITE_CONDITIONS_AND_DRAW()                                                            \
 do                                                                                                  \
@@ -52,79 +56,69 @@ Graphics::Sprite& loadSpriteHover()
 
 #undef BASIC_LOADER
 
-void doReleaseAction(
-    Graphics::Window& window, Graphics::Sprite& spriteToChange, 
-    ButtonsArray& buttons, const Graphics::Event& event
-)
-{
-    spriteToChange = loadSpriteRelease();   
-
-    buttons.drawButtons(window);
-    buttons.interactWithButtons(window, event);
-}
-
 } // anonymous namespace
 
-SettingsButton::SettingsButton(
-    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing
-) : Button(topLeft, width, height, showing, State::Normal) 
+struct MyParams
 {
-    sprite_ = loadSpriteNormal();
-    sprite_.setPosition(topLeft_);
-    sprite_.scaleInPixels({width_, height_});
-}
+    Graphics::Window& window;
+    const Graphics::Event& event;
+};
 
-void SettingsButton::addButtonInShowList(Button* button)
-{
-    buttons_.addButton(button);
-}
+#define CONVERT_PARAMS(PARAMS, OUT_PARAMS_VAR_NAME)     \
+do                                                      \
+{                                                       \
+    OUT_PARAMS_VAR_NAME = (MyParams*)(PARAMS.data);     \
+} while(0)
 
-void SettingsButton::drawButtons(Graphics::Window& window) const
-{
-    buttons_.drawButtons(window);
-}
-
-void SettingsButton::onPress(Graphics::Window& window, const Graphics::Event& event) 
+void onPress(Button& button, TypeErasureData paramsNoType) 
 {
     return;
 }
 
-void SettingsButton::onRelease(Graphics::Window& window, const Graphics::Event& event) 
+void onRelease(Button& button, TypeErasureData paramsNoType) 
 {
-    if (state_ == State::Released)
+    MyParams* params;
+    CONVERT_PARAMS(paramsNoType, params);
+
+    if (button.state() == Button::State::Released)
     {
-        state_  = State::Normal;
-        sprite_ = loadSpriteHover();
-    }
+        button.state(Button::State::Normal);
+        button.sprite(loadSpriteHover());
+    } 
     else
     {
-        state_  = State::Released;
-        doReleaseAction(window, sprite_, buttons_, event);
+        button.state(Button::State::Released);
+        //doReleaseAction(window, sprite_, buttons_, event);
     }
 
-    SET_SPRITE_CONDITIONS_AND_DRAW();
+    //SET_SPRITE_CONDITIONS_AND_DRAW();
 }
 
-void SettingsButton::onHover(Graphics::Window& window, const Graphics::Event& event) 
+void onHover(Button& button, TypeErasureData paramsNoType) 
 {
-    if (state_ != State::Released)
-        sprite_ = loadSpriteHover();
-    else
-        doReleaseAction(window, sprite_, buttons_, event);
+    MyParams* params;
+    CONVERT_PARAMS(paramsNoType, params);
 
-    SET_SPRITE_CONDITIONS_AND_DRAW();
+    if (button.state() != Button::State::Released)
+        button.sprite(loadSpriteHover());
+    else;
+        //doReleaseAction(window, sprite_, buttons_, event);
+
+    //SET_SPRITE_CONDITIONS_AND_DRAW();
 }
 
-void SettingsButton::onUnhover(Graphics::Window& window, const Graphics::Event& event) 
+void onUnhover(Button& button, TypeErasureData paramsNoType) 
 {   
-    switch (state_)
+    MyParams* params;
+    CONVERT_PARAMS(paramsNoType, params);
+    switch (button.state())
     {
-        case State::Released:
-            doReleaseAction(window, sprite_, buttons_, event);
+        case Button::State::Released:
+            //doReleaseAction(window, sprite_, buttons_, event);
             break;
 
-        case State::Normal:
-            sprite_ = loadSpriteNormal();
+        case Button::State::Normal:
+            button.sprite(loadSpriteNormal());
             break;
 
         default: // unreachable
@@ -132,26 +126,30 @@ void SettingsButton::onUnhover(Graphics::Window& window, const Graphics::Event& 
             break;
     }
 
-    SET_SPRITE_CONDITIONS_AND_DRAW();
+    //SET_SPRITE_CONDITIONS_AND_DRAW();
 }
 
-void SettingsButton::interact(Graphics::Window& window, const Graphics::Event& event)
+void interact(
+    Button& button, Graphics::Window& window, const Graphics::Event& event, 
+    TypeErasureData paramsNoType
+)
 {
-    if (!hovered(window))
+    if (!button.isHovered(window))
     {
-        onUnhover(window, event);
+        button.onUnhover(button, paramsNoType);
         return;
     }
 
     switch (event.type)
     {
         case Graphics::Event::EventType::MouseButtonReleased:
-            onRelease(window, event);
+            button.onRelease(button, paramsNoType);
             break;
         
         default:
-            onHover(window, event);
+            button.onHover(button, paramsNoType);
             break;
     }
 }
+
 } // namespace Gui

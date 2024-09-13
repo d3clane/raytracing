@@ -8,10 +8,16 @@ namespace Gui
 {
 
 Button::Button(
-    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
-) : topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state) {}
+    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
+    ButtonFuncType interact, ButtonFuncType onPress, 
+    ButtonFuncType onRelease, ButtonFuncType onHover, ButtonFuncType onUnhover,
+    ButtonFuncType action, TypeErasureData buttonFuncsParams
+): topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state),
+   interact_(interact), onPress_(onPress), onRelease_(onRelease), onHover_(onHover), onUnhover_(onUnhover), 
+   action_(action), buttonFuncsParams_(buttonFuncsParams) {}
 
-bool Button::hovered(const Graphics::Window& window) const
+
+bool Button::isHovered(const Graphics::Window& window) const
 {
     Graphics::WindowPoint mousePos = Graphics::Mouse::getPosition(window);
 
@@ -22,9 +28,10 @@ bool Button::hovered(const Graphics::Window& window) const
     return false;
 }
 
+#if 0
 void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 {
-    if (!hovered(window))
+    if (!isHovered(window))
     {
         onUnhover(window, event);
         return;
@@ -46,12 +53,14 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
             break;
     }    
 }
+#endif
 
 Button::operator Graphics::Sprite() const
 { 
-    return sprite_;
+    return spriteNow_;
 }
 
+#if 0
 void ButtonsArray::addButton(Button* button)
 {
     buttons_.push_back(button);
@@ -71,5 +80,6 @@ void ButtonsArray::interactWithButtons(Graphics::Window& window, const Graphics:
     for (Button* button : buttons_)
         button->interact(window, event);
 }
+#endif
 
 } // namespace Gui
