@@ -5,11 +5,12 @@
 
 #include "Scene/CoordsSystem.hpp"
 #include "Scene/Vector.hpp"
+#include "Scene/Transformable.hpp"
 
 namespace Scene
 {
 
-class Sphere
+class Sphere : public Transformable
 {
     Point center_;
     double radius_;
@@ -26,7 +27,8 @@ public:
     double calcZ(const Graphics::WindowPoint& windowPoint, const CoordsSystem& coordsSystem) const;
     double calcZ(const double x, const double y) const; 
 
-    void moveCenter(const Vector& delta);
+    virtual void move  (const Vector& delta ) override;
+    virtual void setPos(const Point&  center) override;  
 };
 
 } // Scene

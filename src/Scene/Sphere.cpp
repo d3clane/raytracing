@@ -8,7 +8,6 @@ Sphere::Sphere(const Point& center, const double radius, const Graphics::Color& 
 {
 }
 
-
 bool Sphere::isInside(const Point& point) const
 {
     return getDistance3D(center_, point) <= radius_;
@@ -34,9 +33,7 @@ double Sphere::calcZ(const double x, const double y) const
     return sqrt(squareZ);
 }
 
-void Sphere::moveCenter(const Vector& delta)
-{
-    center_ = center_ + delta;
-}
+void Sphere::move   (const Vector& delta ) { center_ = center_ + delta; };
+void Sphere::setPos (const Point&  center) { center_ = center;          };  
 
 } // Scene

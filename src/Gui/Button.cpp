@@ -2,16 +2,61 @@
 
 #include "Graphics/Mouse.hpp"
 
-#include <iostream>
-
 namespace Gui
 {
 
-Button::Button(
-    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
-) : topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state) {}
+namespace 
+{
 
-bool Button::hovered(const Graphics::Window& window) const
+void configureSprite(
+    Graphics::Sprite& sprite, 
+    unsigned int width, unsigned int height, const Graphics::WindowPoint& topLeft
+)
+{
+    sprite.setPosition(topLeft);
+    sprite.scaleInPixels({width, height});
+}
+
+} // namespace anonymous
+Button::Button(
+    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
+    const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
+    const Graphics::Sprite& initReleaseSprite, const Graphics::Sprite& initPressedSprite
+) : topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state),
+    normalSprite(initNormalSprite), hoverSprite(initHoverSprite), 
+    releasedSprite(initReleaseSprite), pressedSprite(initPressedSprite) 
+{
+    switch (state_)
+    {
+        case State::Normal:
+            sprite_ = normalSprite;
+            break;
+        
+        case State::Released:
+            sprite_ = releasedSprite;
+            break;
+        
+        case State::Pressed:
+            sprite_ = pressedSprite;
+            break;
+        
+        case State::Inactive:
+            sprite_ = normalSprite;
+            break;
+        
+        default:
+            break;
+    }
+
+    configureSprite(normalSprite,   width_, height_, topLeft_);
+    configureSprite(releasedSprite, width_, height_, topLeft_);
+    configureSprite(hoverSprite,    width_, height_, topLeft_);
+    configureSprite(pressedSprite,  width_, height_, topLeft_);
+
+    sprite_ = normalSprite;
+}
+
+bool Button::isHovered(const Graphics::Window& window) const
 {
     Graphics::WindowPoint mousePos = Graphics::Mouse::getPosition(window);
 
@@ -24,7 +69,7 @@ bool Button::hovered(const Graphics::Window& window) const
 
 void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 {
-    if (!hovered(window))
+    if (!isHovered(window))
     {
         onUnhover(window, event);
         return;
@@ -47,29 +92,51 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
     }    
 }
 
-Button::operator Graphics::Sprite() const
-{ 
-    return sprite_;
+void Button::onPress(Graphics::Window& window, const Graphics::Event& event)
+{
+    return;
 }
 
-void ButtonsArray::addButton(Button* button)
+void Button::onRelease(Graphics::Window& window, const Graphics::Event& event)
 {
-    buttons_.push_back(button);
-}
-
-void ButtonsArray::drawButtons(Graphics::Window& window) const
-{
-    for (Button* button : buttons_)
+    if (state_ == State::Released)
     {
-        if (button->showing())
-            window.drawSprite(*button);
+        state_  = State::Normal;
+        sprite_ = normalSprite;
+    }
+    else
+        action(window, event);
+}
+
+void Button::onHover  (Graphics::Window& window, const Graphics::Event& event)
+{
+    if (state_ != State::Released)
+        sprite_ = hoverSprite;
+    else
+        action(window, event);
+}
+
+void Button::onUnhover(Graphics::Window& window, const Graphics::Event& event)
+{
+    switch (state_)
+    {
+        case State::Released:
+            action(window, event);
+            break;
+
+        case State::Normal:
+            sprite_ = normalSprite;
+            break;
+
+        default: // unreachable
+            assert(false);
+            break;
     }
 }
 
-void ButtonsArray::interactWithButtons(Graphics::Window& window, const Graphics::Event& event)
-{
-    for (Button* button : buttons_)
-        button->interact(window, event);
+Button::operator Graphics::Sprite() const
+{ 
+    return sprite_;
 }
 
 } // namespace Gui

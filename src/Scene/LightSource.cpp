@@ -89,11 +89,14 @@ void LightSource::highlightSphere(
                 calcSpherePixelColor(
                     coordsSystem, sphere, camera, 
                     Graphics::WindowPoint{x, y}, pixels.getPixel(x, y), 
-                    position_, color_
+                    pos_, color_
                 )
             );
         }
     }
 }
+
+void LightSource::move  (const Vector& delta) { pos_ = pos_ + delta; }
+void LightSource::setPos(const Point&  pos  ) { pos_ = pos;               }
 
 } // Scene

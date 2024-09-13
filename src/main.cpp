@@ -9,6 +9,12 @@
 #include "Gui/SettingsButton.hpp"
 #include "Gui/MoveButton.hpp"
 
+#define TEXTURE_LOAD(FILE_NAME, TEXTURE_NAME, SPRITE_NAME)      \ 
+    Graphics::Texture TEXTURE_NAME;                             \
+    Graphics::Sprite  SPRITE_NAME;                              \
+    TEXTURE_NAME.loadFromFile(FILE_NAME);                       \
+    SPRITE_NAME.setTexture(TEXTURE_NAME);                   
+
 int main()
 {
     const size_t screenWidth  = 800;
@@ -31,36 +37,48 @@ int main()
 
     Scene::Camera camera{Scene::Point{screenWidth / 2, screenHeight / 2, 500}};
 
+    TEXTURE_LOAD("media/textures/SettingsButtonNormal.png",  normalTexture, normalSprite);
+    TEXTURE_LOAD("media/textures/SettingsButtonRelease.jpeg", releaseTexture, releasedSprite);
+    TEXTURE_LOAD("media/textures/SettingsButtonHover.png",   hoverTexture, hoverSprite);
+    Graphics::Sprite pressedSprite{};
+
     Gui::SettingsButton settingsButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, 0}, 
-        buttonWidth, buttonHeight, true
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
 
     const double moveStep = 2;
     Gui::MoveButton moveRight{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{moveStep, 0, 0}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{moveStep, 0, 0}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
     Gui::MoveButton moveDown{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, moveStep, 0}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{0, moveStep, 0}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
     Gui::MoveButton moveLeft{
         Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{-moveStep, 0.01, 0}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{-moveStep, 0.01, 0}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
     Gui::MoveButton moveUp{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, -moveStep, 0}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{0, -moveStep, 0}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
 
     Gui::MoveButton moveForward{
         Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, -moveStep}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, -moveStep}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
     Gui::MoveButton moveBackwards{
         Graphics::WindowPoint{0, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, moveStep}, &sphere
+        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, moveStep}, &sphere,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite
     };
 
     settingsButton.addButtonInShowList(&moveLeft);
@@ -70,8 +88,8 @@ int main()
     settingsButton.addButtonInShowList(&moveForward);
     settingsButton.addButtonInShowList(&moveBackwards);
 
-    Gui::ButtonsArray firstLayerButtons;
-    firstLayerButtons.addButton(&settingsButton);
+    Gui::ButtonManager buttonsManager;
+    buttonsManager.addButton(&settingsButton);
 
     while (window.isOpen())
     {
@@ -93,7 +111,7 @@ int main()
         camera.drawPixels(window, coords, pixelsArray);
 
         //window.drawSprite(settingsButton);
-        firstLayerButtons.interactWithButtons(window, event);
+        buttonsManager.manageButtons(window, event);
         //window.drawSprite(tmpButton1);
         window.display();
     }

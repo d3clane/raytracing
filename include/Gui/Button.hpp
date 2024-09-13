@@ -21,10 +21,22 @@ public:
     };
 
     Button(
-        const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state
+        const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
+        const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
+        const Graphics::Sprite& initReleaseSprite, const Graphics::Sprite& initPressedSprite
     );
 
-    bool hovered(const Graphics::Window& window) const;
+    virtual ~Button() = default;
+
+    // public fields
+
+    Graphics::Sprite normalSprite;
+    Graphics::Sprite hoverSprite;
+    Graphics::Sprite releasedSprite;
+    Graphics::Sprite pressedSprite;
+
+    // functions
+    bool isHovered(const Graphics::Window& window) const;
 
     bool showing() const                   { return showing_; }
     void showing(bool newShowingCondition) { showing_ = newShowingCondition; }
@@ -34,12 +46,15 @@ public:
 
     virtual void interact (Graphics::Window& window, const Graphics::Event& event);
 
-    virtual void onPress  (Graphics::Window& window, const Graphics::Event& event) = 0;
-    virtual void onRelease(Graphics::Window& window, const Graphics::Event& event) = 0;
-    virtual void onHover  (Graphics::Window& window, const Graphics::Event& event) = 0;
-    virtual void onUnhover(Graphics::Window& window, const Graphics::Event& event) = 0;
-
     operator Graphics::Sprite() const;
+
+private:
+    virtual void onPress  (Graphics::Window& window, const Graphics::Event& event);
+    virtual void onRelease(Graphics::Window& window, const Graphics::Event& event);
+    virtual void onHover  (Graphics::Window& window, const Graphics::Event& event);
+    virtual void onUnhover(Graphics::Window& window, const Graphics::Event& event);
+
+    virtual void action   (Graphics::Window& window, const Graphics::Event& event) = 0; 
 
 protected:
     Graphics::WindowPoint topLeft_;
@@ -48,17 +63,6 @@ protected:
     Graphics::Sprite sprite_;
     bool showing_;
     State state_;
-};
-
-class ButtonsArray
-{
-    std::vector< Button* > buttons_;
-public:
-
-    void addButton  (Button* button);
-    void drawButtons(Graphics::Window& window) const;
-    
-    void interactWithButtons(Graphics::Window& window, const Graphics::Event& event);
 };
 
 } // namespace Gui

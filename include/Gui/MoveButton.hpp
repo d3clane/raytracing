@@ -2,7 +2,7 @@
 #define MOVE_BUTTON_HPP
 
 #include "Gui/Button.hpp"
-#include "Scene/Sphere.hpp"
+#include "Scene/Transformable.hpp"
 #include "Scene/Vector.hpp"
 
 namespace Gui
@@ -10,26 +10,23 @@ namespace Gui
 
 class MoveButton : public Button
 {
-    Scene::Sphere* sphere_;
+    Scene::Transformable* object_;
     Scene::Vector  moveDirection_;
 
 public:
     MoveButton(
         const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
-        const Scene::Vector& moveDirection, Scene::Sphere* sphere
+        const Scene::Vector& moveDirection, Scene::Transformable* object,
+        const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite,
+        const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite
     );
 
-    void sphere(Scene::Sphere* sphere) { sphere_ = sphere; }
+    void object(Scene::Transformable* object)  { object_ = object; }
+    Scene::Transformable*       object()       { return object_;   }
+    const Scene::Transformable* object() const { return object_;   }
 
-    Scene::Sphere*       sphere()       { return sphere_; }
-    const Scene::Sphere* sphere() const { return sphere_; }
-
-    virtual void interact   (Graphics::Window& window, const Graphics::Event& event);
-
-    virtual void onPress    (Graphics::Window& window, const Graphics::Event& event);
-    virtual void onRelease  (Graphics::Window& window, const Graphics::Event& event);
-    virtual void onHover    (Graphics::Window& window, const Graphics::Event& event);
-    virtual void onUnhover  (Graphics::Window& window, const Graphics::Event& event);
+private:
+    virtual void action(Graphics::Window& window, const Graphics::Event& event) override;
 };
 
 } // namespace Gui
