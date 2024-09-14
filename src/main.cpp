@@ -9,6 +9,8 @@
 #include "Gui/SettingsButton.hpp"
 #include "Gui/MoveButton.hpp"
 
+#include <iostream>
+
 #define TEXTURE_LOAD(FILE_NAME, TEXTURE_NAME, SPRITE_NAME)      \ 
     Graphics::Texture TEXTURE_NAME;                             \
     Graphics::Sprite  SPRITE_NAME;                              \
@@ -37,12 +39,12 @@ int main()
 
     Scene::Camera camera{Scene::Point{screenWidth / 2, screenHeight / 2, 500}};
 
-    TEXTURE_LOAD("media/textures/SettingsButtonNormal.png",  normalTexture, normalSprite);
-    TEXTURE_LOAD("media/textures/SettingsButtonRelease.jpeg", releaseTexture, releasedSprite);
-    TEXTURE_LOAD("media/textures/SettingsButtonHover.png",   hoverTexture, hoverSprite);
+    TEXTURE_LOAD("media/textures/buttonNormal.jpeg" , normalTexture , normalSprite);
+    TEXTURE_LOAD("media/textures/buttonReleased.png", releaseTexture, releasedSprite);
+    TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite);
     Graphics::Sprite pressedSprite{};
 
-    std::chrono::milliseconds interactionDuration{20000};
+    std::chrono::milliseconds interactionDuration{2000};
 
     Gui::SettingsButton settingsButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, 0}, 

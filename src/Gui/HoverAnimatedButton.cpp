@@ -1,8 +1,6 @@
 #include "Graphics/PixelsArray.hpp"
 #include "Gui/HoverAnimatedButton.hpp"
 
-#include <iostream>
-
 namespace Gui
 {
 
@@ -16,8 +14,11 @@ void setColorAlpha(Graphics::Sprite& sprite, const uint8_t alpha)
 }
 
 void animate(
-    Graphics::Window& window, Graphics::Sprite& sprite_, Graphics::Sprite& prevSprite_,
-    const std::chrono::steady_clock::time_point& timeBegin, const std::chrono::milliseconds& duration
+    Graphics::Window& window, 
+    Graphics::Sprite& sprite_, uint8_t spriteBeginAlpha_, 
+    Graphics::Sprite& prevSprite_,
+    const std::chrono::steady_clock::time_point& animationBeginTime_, 
+    const std::chrono::milliseconds& duration
 )
 {
     Graphics::Color color = sprite_.getColor();
@@ -25,9 +26,9 @@ void animate(
     using ms = std::chrono::milliseconds;
     auto timeNow = std::chrono::steady_clock::now();
 
-    color.alpha_ += std::min(
-        255 * (double)std::chrono::duration_cast<ms>(timeNow - timeBegin).count() / duration.count(),
-        255. - color.alpha_
+    color.alpha_ = std::min(255., 
+        spriteBeginAlpha_ + 255 * 
+            (double)std::chrono::duration_cast<ms>(timeNow - animationBeginTime_).count() / duration.count()
     );
 
     sprite_.setColor(color);
@@ -35,8 +36,6 @@ void animate(
     setColorAlpha(prevSprite_, 255 - color.alpha_);
 
     window.drawSprite(prevSprite_);
-
-    std::cout << "sprite: " << (int)sprite_.getColor().alpha_ << "prev: " << (int)prevSprite_.getColor().alpha_ << std::endl;
 }
 
 } // namespace anonymous
@@ -59,13 +58,13 @@ HoverAnimatedButton::PrevSpriteWrap::operator Graphics::Sprite&()
 
 HoverAnimatedButton::HoverAnimatedButton(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
-    const Graphics::Sprite& normalSprite, const Graphics::Sprite& releasedSprite, 
-    const Graphics::Sprite& hoverSprite, const Graphics::Sprite& pressedSprite,
+    const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite, 
+    const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite,
     std::chrono::milliseconds interactionDuration
 ) : Button(
         topLeft, width, height, showing, State::Normal,
         normalSprite, hoverSprite, releasedSprite, pressedSprite
-    ), interactionDuration_(interactionDuration)
+    ), animationDuration_(interactionDuration)
 {
     prevSprite_.setPrevSprite(hoveredSprite_);
     sprite_     = normalSprite_;
@@ -82,13 +81,18 @@ void HoverAnimatedButton::onHover(Graphics::Window& window, const Graphics::Even
 
     if (animationType_ != AnimationType::Hovering)
     {
-        interactionTimeBegin_ = std::chrono::steady_clock::now();
+        animationBeginTime_ = std::chrono::steady_clock::now();
         animationType_ = AnimationType::Hovering;
 
         std::swap(sprite_, (Graphics::Sprite&)prevSprite_);
+
+        spriteBeginAlpha_ = sprite_.getColor().alpha_;
     }
     
-    animate(window, sprite_, (Graphics::Sprite&)prevSprite_, interactionTimeBegin_, interactionDuration_);
+    animate(
+        window, sprite_, spriteBeginAlpha_, (Graphics::Sprite&)prevSprite_, 
+        animationBeginTime_, animationDuration_
+    );
 }
 
 void HoverAnimatedButton::onUnhover(Graphics::Window& window, const Graphics::Event& event)
@@ -101,15 +105,18 @@ void HoverAnimatedButton::onUnhover(Graphics::Window& window, const Graphics::Ev
 
     if (animationType_ != AnimationType::Unhovering)
     {
-        interactionTimeBegin_ = std::chrono::steady_clock::now();
+        animationBeginTime_ = std::chrono::steady_clock::now();
         animationType_ = AnimationType::Unhovering;
         
         std::swap(sprite_, (Graphics::Sprite&)prevSprite_);
 
-        //std::cout << (int)prevSprite_.getPrevSpriteLink().getColor().alpha_ << "\n";
+        spriteBeginAlpha_ = sprite_.getColor().alpha_;
     }
 
-    animate(window, sprite_, (Graphics::Sprite&)prevSprite_, interactionTimeBegin_, interactionDuration_);
+    animate(
+        window, sprite_, spriteBeginAlpha_, (Graphics::Sprite&)prevSprite_, 
+        animationBeginTime_, animationDuration_
+    );
 }
 
 void HoverAnimatedButton::onRelease(Graphics::Window& window, const Graphics::Event& event)

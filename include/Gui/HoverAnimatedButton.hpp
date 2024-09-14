@@ -33,8 +33,10 @@ class HoverAnimatedButton : public Button
 
     PrevSpriteWrap prevSprite_;
 
-    std::chrono::steady_clock::time_point interactionTimeBegin_; // time hovered or unhovered
-    std::chrono::milliseconds interactionDuration_;              // time on interaction
+    std::chrono::steady_clock::time_point animationBeginTime_; // time hovered or unhovered
+    uint8_t spriteBeginAlpha_;
+
+    std::chrono::milliseconds animationDuration_;              // time on interaction
     AnimationType animationType_;
 
 public:
@@ -42,7 +44,7 @@ public:
         const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
         const Graphics::Sprite& normalSprite  , const Graphics::Sprite& hoveredSprite,
         const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite,
-        std::chrono::milliseconds interactionDuration_
+        std::chrono::milliseconds animationDuration
     );
 
     virtual ~HoverAnimatedButton() = default;
