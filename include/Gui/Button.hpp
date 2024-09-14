@@ -28,13 +28,6 @@ public:
 
     virtual ~Button() = default;
 
-    // public fields
-
-    Graphics::Sprite normalSprite;
-    Graphics::Sprite hoverSprite;
-    Graphics::Sprite releasedSprite;
-    Graphics::Sprite pressedSprite;
-
     // functions
     bool isHovered(const Graphics::Window& window) const;
 
@@ -49,13 +42,13 @@ public:
     operator Graphics::Sprite() const;
 
 private:
-    virtual void onPress  (Graphics::Window& window, const Graphics::Event& event);
-    virtual void onRelease(Graphics::Window& window, const Graphics::Event& event);
-    virtual void onHover  (Graphics::Window& window, const Graphics::Event& event);
-    virtual void onUnhover(Graphics::Window& window, const Graphics::Event& event);
+    virtual void onPress    (Graphics::Window& window, const Graphics::Event& event);
+    virtual void onRelease  (Graphics::Window& window, const Graphics::Event& event);
+    virtual void onHover    (Graphics::Window& window, const Graphics::Event& event);
+    virtual void onUnhover  (Graphics::Window& window, const Graphics::Event& event);
 
-    virtual void action   (Graphics::Window& window, const Graphics::Event& event) = 0; 
-
+    virtual void action     (Graphics::Window& window, const Graphics::Event& event) = 0; 
+    virtual void undoAction (Graphics::Window& window, const Graphics::Event& event) = 0;
 protected:
     Graphics::WindowPoint topLeft_;
     unsigned int width_, height_;
@@ -63,6 +56,11 @@ protected:
     Graphics::Sprite sprite_;
     bool showing_;
     State state_;
+
+    Graphics::Sprite normalSprite_;
+    Graphics::Sprite hoveredSprite_;
+    Graphics::Sprite releasedSprite_;
+    Graphics::Sprite pressedSprite_;
 };
 
 } // namespace Gui

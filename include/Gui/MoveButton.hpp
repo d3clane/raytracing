@@ -1,14 +1,14 @@
 #ifndef MOVE_BUTTON_HPP
 #define MOVE_BUTTON_HPP
 
-#include "Gui/Button.hpp"
+#include "Gui/HoverAnimatedButton.hpp"
 #include "Scene/Transformable.hpp"
 #include "Scene/Vector.hpp"
 
 namespace Gui
 {
 
-class MoveButton : public Button
+class MoveButton : public HoverAnimatedButton
 {
     Scene::Transformable* object_;
     Scene::Vector  moveDirection_;
@@ -16,9 +16,10 @@ class MoveButton : public Button
 public:
     MoveButton(
         const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
-        const Scene::Vector& moveDirection, Scene::Transformable* object,
-        const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite,
-        const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite
+        const Graphics::Sprite& normalSprite  , const Graphics::Sprite& hoveredSprite, 
+        const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite,
+        std::chrono::milliseconds interactionDuration, 
+        Scene::Transformable* object, const Scene::Vector& moveDirection
     );
 
     void object(Scene::Transformable* object)  { object_ = object; }
@@ -26,7 +27,8 @@ public:
     const Scene::Transformable* object() const { return object_;   }
 
 private:
-    virtual void action(Graphics::Window& window, const Graphics::Event& event) override;
+    virtual void action     (Graphics::Window& window, const Graphics::Event& event) override;
+    virtual void undoAction (Graphics::Window& window, const Graphics::Event& event) override;
 };
 
 } // namespace Gui

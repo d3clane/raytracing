@@ -2,6 +2,7 @@
 #define SPRITE_HPP
 
 #include <SFML/Graphics.hpp>
+#include <chrono>
 
 #include "Graphics/GraphicsWindow.hpp"
 
@@ -9,6 +10,7 @@ namespace Graphics
 {
 
 class Texture;
+class Color;
 
 class Sprite
 {
@@ -23,6 +25,9 @@ public:
     void scaleInPixels(const WindowVector& scaleInPixels);
 
     WindowVector getScaleInPixels() const;
+
+    void  setColor(const Color& color);
+    Color getColor() const;
 
     friend void Window::drawSprite(const Sprite& sprite);
 };

@@ -6,12 +6,13 @@ namespace Gui
 
 MoveButton::MoveButton(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
-    const Scene::Vector& moveDirection, Scene::Transformable* object,
-    const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite,
-    const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite
-) : Button(
-        topLeft, width, height, showing, State::Normal,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+    const Graphics::Sprite& normalSprite  , const Graphics::Sprite& hoveredSprite, 
+    const Graphics::Sprite& releasedSprite, const Graphics::Sprite& pressedSprite,
+    std::chrono::milliseconds interactionDuration, 
+    Scene::Transformable* object, const Scene::Vector& moveDirection
+) : HoverAnimatedButton(
+        topLeft, width, height, showing,
+        normalSprite, hoveredSprite, releasedSprite, pressedSprite, interactionDuration
     ), moveDirection_(moveDirection), object_(object)
 {
 }
@@ -19,9 +20,14 @@ MoveButton::MoveButton(
 void MoveButton::action(Graphics::Window& window, const Graphics::Event& event)
 {
     state_  = State::Released;
-    sprite_ = releasedSprite;
+    sprite_ = releasedSprite_;
 
     if (object_) object_->move(moveDirection_);
+}
+
+void MoveButton::undoAction(Graphics::Window& window, const Graphics::Event& event)
+{
+    return;
 }
 
 } // namespace Gui

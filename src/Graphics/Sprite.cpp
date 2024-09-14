@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.hpp"
 #include "Graphics/Texture.hpp"
+#include "Graphics/PixelsArray.hpp"
 
 
 namespace Graphics
@@ -38,6 +39,16 @@ WindowVector Sprite::getScaleInPixels() const
         return WindowVector(0, 0);
  
     return WindowVector(texture->getSize().x, texture->getSize().y);
+}
+
+void Sprite::setColor(const Color& color)
+{
+    sprite_.setColor((const sf::Color&)color);
+}
+
+Color Sprite::getColor() const
+{
+    return (Color)sprite_.getColor();
 }
 
 } // namespace Graphics

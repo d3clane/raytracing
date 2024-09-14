@@ -21,10 +21,13 @@ public:
     Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) noexcept
         : red_{red}, green_{green}, blue_{blue}, alpha_{alpha} {}
     Color() : Color(0, 0, 0, 255) {}
+    explicit Color(const sf::Color& color) : Color(color.r, color.g, color.b, color.a) {}
 
     Color operator +(const Color& other)  const;
     Color operator *(const double& coeff) const;
     Color operator *(const Color& other)  const;
+
+    explicit operator sf::Color() { return sf::Color(red_, green_, blue_, alpha_); }
 };
 
 class PixelsArray

@@ -23,37 +23,37 @@ Button::Button(
     const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
     const Graphics::Sprite& initReleaseSprite, const Graphics::Sprite& initPressedSprite
 ) : topLeft_(topLeft), width_(width), height_(height), showing_(showing), state_(state),
-    normalSprite(initNormalSprite), hoverSprite(initHoverSprite), 
-    releasedSprite(initReleaseSprite), pressedSprite(initPressedSprite) 
+    normalSprite_(initNormalSprite), hoveredSprite_(initHoverSprite), 
+    releasedSprite_(initReleaseSprite), pressedSprite_(initPressedSprite) 
 {
     switch (state_)
     {
         case State::Normal:
-            sprite_ = normalSprite;
+            sprite_ = normalSprite_;
             break;
         
         case State::Released:
-            sprite_ = releasedSprite;
+            sprite_ = releasedSprite_;
             break;
         
         case State::Pressed:
-            sprite_ = pressedSprite;
+            sprite_ = pressedSprite_;
             break;
         
         case State::Inactive:
-            sprite_ = normalSprite;
+            sprite_ = normalSprite_;
             break;
         
         default:
             break;
     }
 
-    configureSprite(normalSprite,   width_, height_, topLeft_);
-    configureSprite(releasedSprite, width_, height_, topLeft_);
-    configureSprite(hoverSprite,    width_, height_, topLeft_);
-    configureSprite(pressedSprite,  width_, height_, topLeft_);
+    configureSprite(normalSprite_,   width_, height_, topLeft_);
+    configureSprite(releasedSprite_, width_, height_, topLeft_);
+    configureSprite(hoveredSprite_,    width_, height_, topLeft_);
+    configureSprite(pressedSprite_,  width_, height_, topLeft_);
 
-    sprite_ = normalSprite;
+    sprite_ = normalSprite_;
 }
 
 bool Button::isHovered(const Graphics::Window& window) const
@@ -102,7 +102,7 @@ void Button::onRelease(Graphics::Window& window, const Graphics::Event& event)
     if (state_ == State::Released)
     {
         state_  = State::Normal;
-        sprite_ = normalSprite;
+        sprite_ = normalSprite_;
     }
     else
         action(window, event);
@@ -111,7 +111,7 @@ void Button::onRelease(Graphics::Window& window, const Graphics::Event& event)
 void Button::onHover  (Graphics::Window& window, const Graphics::Event& event)
 {
     if (state_ != State::Released)
-        sprite_ = hoverSprite;
+        sprite_ = hoveredSprite_;
     else
         action(window, event);
 }
@@ -125,7 +125,7 @@ void Button::onUnhover(Graphics::Window& window, const Graphics::Event& event)
             break;
 
         case State::Normal:
-            sprite_ = normalSprite;
+            sprite_ = normalSprite_;
             break;
 
         default: // unreachable

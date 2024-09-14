@@ -42,43 +42,58 @@ int main()
     TEXTURE_LOAD("media/textures/SettingsButtonHover.png",   hoverTexture, hoverSprite);
     Graphics::Sprite pressedSprite{};
 
+    std::chrono::milliseconds interactionDuration{20000};
+
     Gui::SettingsButton settingsButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, 0}, 
         buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration
     };
 
     const double moveStep = 2;
     Gui::MoveButton moveRight{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{moveStep, 0, 0}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{moveStep, 0, 0}
     };
     Gui::MoveButton moveDown{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, moveStep, 0}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{0, moveStep, 0}
     };
     Gui::MoveButton moveLeft{
         Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{-moveStep, 0.01, 0}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{-moveStep, 0, 0}
     };
     Gui::MoveButton moveUp{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, -moveStep, 0}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{0, -moveStep, 0}
     };
 
     Gui::MoveButton moveForward{
         Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, -moveStep}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{0, 0, -moveStep}
     };
     Gui::MoveButton moveBackwards{
         Graphics::WindowPoint{0, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true, Scene::Vector{0, 0, moveStep}, &sphere,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite
+        buttonWidth, buttonHeight, true,
+        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        interactionDuration, 
+        &sphere, Scene::Vector{0, 0, moveStep}
     };
 
     settingsButton.addButtonInShowList(&moveLeft);
