@@ -95,12 +95,12 @@ bool Window::pollEvent(Event& event)
 
         case sf::Event::MouseButtonPressed:
             event.type = Event::EventType::MouseButtonPressed;
-            event.mouseButton = convertSfButtonToButton(event.sfEvent.mouseButton.button);
+            event.mouseButton = convertSfButtonEventToButtonEvent(event.sfEvent.mouseButton);
             break;
 
         case sf::Event::MouseButtonReleased:
             event.type = Event::EventType::MouseButtonReleased;
-            event.mouseButton = convertSfButtonToButton(event.sfEvent.mouseButton.button);
+            event.mouseButton = convertSfButtonEventToButtonEvent(event.sfEvent.mouseButton);
             break;
             
         default:

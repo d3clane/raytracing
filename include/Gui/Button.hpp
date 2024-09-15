@@ -30,7 +30,8 @@ public:
 
     // functions
     bool isHovered(const Graphics::Window& window) const;
-
+    bool isHovered(int mousePosX, int mousePosY)   const;
+    
     bool showing() const                   { return showing_; }
     void showing(bool newShowingCondition) { showing_ = newShowingCondition; }
 

@@ -53,17 +53,26 @@ Mouse::Button convertSfButtonToButton(const sf::Mouse::Button& sfButton)
     return Mouse::Button::Left;
 }
 
-sf::Mouse::Wheel convertWheelToSfWheel(const Mouse::Wheel& wheel)
+sf::Event::MouseButtonEvent convertButtonEventToSfButtonEvent(const Event::MouseButtonEvent& button)
 {
-    switch (wheel)
-    {
-        case Mouse::Wheel::VerticalWheel:      return sf::Mouse::VerticalWheel;
-        case Mouse::Wheel::HorizontalWheel:    return sf::Mouse::HorizontalWheel;
-        default: assert(false); // unreachable
-    }
+    sf::Event::MouseButtonEvent sfButtonEvent;
 
-    assert(false); // unreachable
-    return sf::Mouse::VerticalWheel;
+    sfButtonEvent.x      = button.x;
+    sfButtonEvent.y      = button.y;
+    sfButtonEvent.button = convertButtonToSfButton(button.button);
+
+    return sfButtonEvent;
+}
+
+Event::MouseButtonEvent convertSfButtonEventToButtonEvent(const sf::Event::MouseButtonEvent& sfButton)
+{
+    Event::MouseButtonEvent buttonEvent;
+
+    buttonEvent.x      = sfButton.x;
+    buttonEvent.y      = sfButton.y;
+    buttonEvent.button = convertSfButtonToButton(sfButton.button);
+
+    return buttonEvent;
 }
 
 } // namespace Graphics

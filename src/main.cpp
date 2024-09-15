@@ -21,27 +21,28 @@ int main()
 {
     const size_t screenWidth  = 800;
     const size_t screenHeight = 600;
-    const size_t buttonWidth  = 64;
-    const size_t buttonHeight = 32;
+    const size_t buttonWidth  = 128;
+    const size_t buttonHeight = 64;
 
     Graphics::Window window{screenWidth, screenHeight, "RayTracing"};
     Scene::Sphere sphere{Scene::Point{screenWidth / 2, screenHeight / 2, 0}, screenHeight / 3, 
-        Graphics::Color(255, 0, 255, 0)
+        Graphics::Color{255, 0, 255, 0}
     };
 
     Scene::CoordsSystem coords{1u, Scene::Point{0, 0, 0}};
 
-    Scene::LightSource lightSource1{Scene::Point{-100, screenHeight / 2, 0}, Graphics::Color(255, 255, 0, 255)};
-    Scene::LightSource lightSource2{Scene::Point{screenWidth, screenHeight, 300}, 
-        Graphics::Color(0, 255, 255, 255)
+    Scene::LightSource lightSource1{Scene::Point{-100, screenHeight / 2, 0}, Graphics::Color{255, 255, 0, 255}};
+    Scene::LightSource lightSource2{
+        Scene::Point{screenWidth, screenHeight, 300}, 
+        Graphics::Color{0, 255, 255, 255}
     };
-    Scene::LightSource lightSource3{Scene::Point{screenWidth, 0, -200}, Graphics::Color(255, 255, 255, 255)};
+    Scene::LightSource lightSource3{Scene::Point{screenWidth, 0, -200}, Graphics::Color{255, 255, 255, 255}};
 
     Scene::Camera camera{Scene::Point{screenWidth / 2, screenHeight / 2, 500}};
 
-    TEXTURE_LOAD("media/textures/buttonNormal.jpeg" , normalTexture , normalSprite);
+    TEXTURE_LOAD("media/textures/buttonNormal.jpeg" , normalTexture , normalSprite  );
     TEXTURE_LOAD("media/textures/buttonReleased.png", releaseTexture, releasedSprite);
-    TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite);
+    TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite   );
     Graphics::Sprite pressedSprite{};
 
     std::chrono::milliseconds interactionDuration{2000};
@@ -127,9 +128,7 @@ int main()
 
         camera.drawPixels(window, coords, pixelsArray);
 
-        //window.drawSprite(settingsButton);
         buttonsManager.manageButtons(window, event);
-        //window.drawSprite(tmpButton1);
         window.display();
     }
 }

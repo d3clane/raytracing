@@ -36,12 +36,18 @@ public:
         E,
     };
 
+    struct MouseButtonEvent
+    {
+        Mouse::Button button;
+        int x, y;
+    };
+
     EventType type;
 
     union
     {
         WindowPoint mousePos;
-        Mouse::Button mouseButton;
+        MouseButtonEvent mouseButton;
         KeyCode keyCode;
     };
 

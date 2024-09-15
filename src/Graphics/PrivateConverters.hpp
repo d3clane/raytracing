@@ -10,9 +10,10 @@ namespace Graphics
 {
 
 sf::Mouse::Button convertButtonToSfButton(const Mouse::Button& button);
-Mouse::Button convertSfButtonToButton(const sf::Mouse::Button& sfButton);
+Mouse::Button     convertSfButtonToButton(const sf::Mouse::Button& sfButton);
 
-sf::Mouse::Wheel  convertWheelToSfWheel  (const Mouse::Wheel& wheel);
+sf::Event::MouseButtonEvent convertButtonEventToSfButtonEvent(const Event::MouseButtonEvent&       button);
+Event::MouseButtonEvent     convertSfButtonEventToButtonEvent(const sf::Event::MouseButtonEvent& sfButton);
 
 Event::KeyCode convertSfKeyCodeToKeyCode(sf::Keyboard::Key sfKeyCode);
 

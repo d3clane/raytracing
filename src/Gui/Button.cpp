@@ -60,16 +60,26 @@ bool Button::isHovered(const Graphics::Window& window) const
 {
     Graphics::WindowPoint mousePos = Graphics::Mouse::getPosition(window);
 
-    if (topLeft_.x <= mousePos.x && mousePos.x <= topLeft_.x + width_ &&
-        topLeft_.y <= mousePos.y && mousePos.y <= topLeft_.y + height_)
+    return isHovered(mousePos.x, mousePos.y);
+}
+
+bool Button::isHovered(int mousePosX, int mousePosY) const
+{
+    if (topLeft_.x <= mousePosX && mousePosX <= topLeft_.x + width_ &&
+        topLeft_.y <= mousePosY && mousePosY <= topLeft_.y + height_)
         return true;
 
-    return false;
+    return false;    
 }
 
 void Button::interact(Graphics::Window& window, const Graphics::Event& event)
 {
-    if (!isHovered(window))
+    bool hoveredByInteractionMouse = 
+        (event.type == Graphics::Event::EventType::MouseButtonReleased || 
+         event.type == Graphics::Event::EventType::MouseButtonPressed) &&
+        isHovered(event.mouseButton.x, event.mouseButton.y);
+
+    if (!isHovered(window) && !hoveredByInteractionMouse)
     {
         onUnhover(window, event);
         return;
@@ -78,7 +88,6 @@ void Button::interact(Graphics::Window& window, const Graphics::Event& event)
     switch (event.type)
     {
         case Graphics::Event::EventType::MouseButtonReleased:
-
             onRelease(window, event);
             break;
         
