@@ -51,7 +51,6 @@ public:
         KeyCode keyCode;
     };
 
-
     Event();
     
     friend bool Window::pollEvent(Event& event);

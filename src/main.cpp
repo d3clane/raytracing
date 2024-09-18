@@ -8,6 +8,7 @@
 
 #include "Gui/SettingsButton.hpp"
 #include "Gui/MoveButton.hpp"
+#include "Gui/ColorSphereButton.hpp"
 
 #include <iostream>
 
@@ -44,6 +45,11 @@ int main()
     TEXTURE_LOAD("media/textures/buttonReleased.png", releaseTexture, releasedSprite);
     TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite   );
     Graphics::Sprite pressedSprite{};
+
+    TEXTURE_LOAD("media/textures/redButton.png"   , colorRedTexture  , colorRedSprite   );
+    TEXTURE_LOAD("media/textures/greenButton.jpeg", colorGreenTexture, colorGreenSprite );
+    TEXTURE_LOAD("media/textures/blueButton.png" , colorBlueTexture , colorBlueSprite  );
+    TEXTURE_LOAD("media/textures/whiteButton.png" , colorWhiteTexture, colorWhiteSprite );
 
     std::chrono::milliseconds interactionDuration{2000};
 
@@ -98,6 +104,30 @@ int main()
         interactionDuration, 
         &sphere, Scene::Vector{0, 0, moveStep}
     };
+    Gui::ColorSphereButton colorRedButton{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 3 * buttonHeight},
+        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
+        colorRedSprite, colorRedSprite, colorRedSprite, colorRedSprite,
+        &sphere, Graphics::Color(255, 0, 0, 255)
+    };
+    Gui::ColorSphereButton colorGreenButton{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 4 * buttonHeight},
+        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
+        colorGreenSprite, colorGreenSprite, colorGreenSprite, colorGreenSprite,
+        &sphere, Graphics::Color(0, 255, 0, 255)
+    };
+    Gui::ColorSphereButton colorBlueButton{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 5 * buttonHeight},
+        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
+        colorBlueSprite, colorBlueSprite, colorBlueSprite, colorBlueSprite,
+        &sphere, Graphics::Color(0, 0, 255, 255)
+    };
+    Gui::ColorSphereButton colorWhiteButton{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 6 * buttonHeight},
+        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
+        colorWhiteSprite, colorWhiteSprite, colorWhiteSprite, colorWhiteSprite,
+        &sphere, Graphics::Color(255, 255, 255, 255)
+    };
 
     settingsButton.addButtonInShowList(&moveLeft);
     settingsButton.addButtonInShowList(&moveRight);
@@ -105,7 +135,11 @@ int main()
     settingsButton.addButtonInShowList(&moveDown);
     settingsButton.addButtonInShowList(&moveForward);
     settingsButton.addButtonInShowList(&moveBackwards);
-
+    settingsButton.addButtonInShowList(&colorRedButton);
+    settingsButton.addButtonInShowList(&colorGreenButton);
+    settingsButton.addButtonInShowList(&colorBlueButton);
+    settingsButton.addButtonInShowList(&colorWhiteButton);
+    
     Gui::ButtonManager buttonsManager;
     buttonsManager.addButton(&settingsButton);
 

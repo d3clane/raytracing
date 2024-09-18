@@ -50,7 +50,7 @@ Button::Button(
 
     configureSprite(normalSprite_,   width_, height_, topLeft_);
     configureSprite(releasedSprite_, width_, height_, topLeft_);
-    configureSprite(hoveredSprite_,    width_, height_, topLeft_);
+    configureSprite(hoveredSprite_,  width_, height_, topLeft_);
     configureSprite(pressedSprite_,  width_, height_, topLeft_);
 
     sprite_ = normalSprite_;

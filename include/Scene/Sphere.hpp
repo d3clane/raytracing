@@ -23,6 +23,7 @@ public:
 
     Point center() const { return center_; }
     Graphics::Color color() const { return color_; }
+    void color(Graphics::Color color) { color_ = color; }
     
     double calcZ(const Graphics::WindowPoint& windowPoint, const CoordsSystem& coordsSystem) const;
     double calcZ(const double x, const double y) const; 
