@@ -25,19 +25,26 @@ int main()
     const size_t buttonWidth  = 128;
     const size_t buttonHeight = 64;
 
+    const Graphics::Color black{0, 0, 0, 255};
+    const Graphics::Color white{255, 255, 255, 255};
+    const Graphics::Color red  {255, 0, 0, 255};
+    const Graphics::Color green{0, 255, 0, 255};
+    const Graphics::Color blue {0, 0, 255, 255};
+    const Graphics::Color yellow{255, 255, 0, 255};
+    const Graphics::Color purple{255, 0, 255, 255};
+    const Graphics::Color cyan {0, 255, 255, 255};
+
     Graphics::Window window{screenWidth, screenHeight, "RayTracing"};
     Scene::Sphere sphere{Scene::Point{screenWidth / 2, screenHeight / 2, 0}, screenHeight / 3, 
-        Graphics::Color{255, 0, 255, 0}
+        purple
     };
 
     Scene::CoordsSystem coords{1u, Scene::Point{0, 0, 0}};
 
-    Scene::LightSource lightSource1{Scene::Point{-100, screenHeight / 2, 0}, Graphics::Color{255, 255, 0, 255}};
-    Scene::LightSource lightSource2{
-        Scene::Point{screenWidth, screenHeight, 300}, 
-        Graphics::Color{0, 255, 255, 255}
-    };
-    Scene::LightSource lightSource3{Scene::Point{screenWidth, 0, -200}, Graphics::Color{255, 255, 255, 255}};
+    Scene::LightSource lightSource1{Scene::Point{-100, screenHeight / 2, 0}, yellow};
+    Scene::LightSource lightSource2{Scene::Point{screenWidth, screenHeight, 300}, cyan};
+
+    Scene::LightSource lightSource3{Scene::Point{screenWidth, 0, -200}, white};
 
     Scene::Camera camera{Scene::Point{screenWidth / 2, screenHeight / 2, 500}};
 
@@ -46,10 +53,11 @@ int main()
     TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite   );
     Graphics::Sprite pressedSprite{};
 
-    TEXTURE_LOAD("media/textures/redButton.png"   , colorRedTexture  , colorRedSprite   );
-    TEXTURE_LOAD("media/textures/greenButton.jpeg", colorGreenTexture, colorGreenSprite );
-    TEXTURE_LOAD("media/textures/blueButton.png" , colorBlueTexture , colorBlueSprite  );
-    TEXTURE_LOAD("media/textures/whiteButton.png" , colorWhiteTexture, colorWhiteSprite );
+    TEXTURE_LOAD("media/textures/redButton.png"   , colorRedTexture  , colorRedSprite    );
+    TEXTURE_LOAD("media/textures/greenButton.jpeg", colorGreenTexture, colorGreenSprite  );
+    TEXTURE_LOAD("media/textures/blueButton.png"  , colorBlueTexture , colorBlueSprite   );
+    TEXTURE_LOAD("media/textures/whiteButton.png" , colorWhiteTexture, colorWhiteSprite  );
+    TEXTURE_LOAD("media/textures/purpleButton.png", colorPurpleTexture, colorPurpleSprite);
 
     std::chrono::milliseconds interactionDuration{2000};
 
@@ -108,37 +116,44 @@ int main()
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 3 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorRedSprite, colorRedSprite, colorRedSprite, colorRedSprite,
-        &sphere, Graphics::Color(255, 0, 0, 255)
+        &sphere, red
     };
     Gui::ColorSphereButton colorGreenButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 4 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorGreenSprite, colorGreenSprite, colorGreenSprite, colorGreenSprite,
-        &sphere, Graphics::Color(0, 255, 0, 255)
+        &sphere, green
     };
     Gui::ColorSphereButton colorBlueButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 5 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorBlueSprite, colorBlueSprite, colorBlueSprite, colorBlueSprite,
-        &sphere, Graphics::Color(0, 0, 255, 255)
+        &sphere, blue
     };
     Gui::ColorSphereButton colorWhiteButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 6 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorWhiteSprite, colorWhiteSprite, colorWhiteSprite, colorWhiteSprite,
-        &sphere, Graphics::Color(255, 255, 255, 255)
+        &sphere, white
+    };
+    Gui::ColorSphereButton colorPurpleButton{
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 7 * buttonHeight},
+        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
+        colorPurpleSprite, colorPurpleSprite, colorPurpleSprite, colorPurpleSprite,
+        &sphere, purple
     };
 
-    settingsButton.addButtonInShowList(&moveLeft);
-    settingsButton.addButtonInShowList(&moveRight);
-    settingsButton.addButtonInShowList(&moveUp);
-    settingsButton.addButtonInShowList(&moveDown);
-    settingsButton.addButtonInShowList(&moveForward);
-    settingsButton.addButtonInShowList(&moveBackwards);
-    settingsButton.addButtonInShowList(&colorRedButton);
-    settingsButton.addButtonInShowList(&colorGreenButton);
-    settingsButton.addButtonInShowList(&colorBlueButton);
-    settingsButton.addButtonInShowList(&colorWhiteButton);
+    settingsButton.addButtonInShowList(&moveLeft            );
+    settingsButton.addButtonInShowList(&moveRight           );
+    settingsButton.addButtonInShowList(&moveUp              );
+    settingsButton.addButtonInShowList(&moveDown            );
+    settingsButton.addButtonInShowList(&moveForward         );
+    settingsButton.addButtonInShowList(&moveBackwards       );
+    settingsButton.addButtonInShowList(&colorRedButton      );
+    settingsButton.addButtonInShowList(&colorGreenButton    );
+    settingsButton.addButtonInShowList(&colorBlueButton     );
+    settingsButton.addButtonInShowList(&colorWhiteButton    );
+    settingsButton.addButtonInShowList(&colorPurpleButton   );
     
     Gui::ButtonManager buttonsManager;
     buttonsManager.addButton(&settingsButton);
