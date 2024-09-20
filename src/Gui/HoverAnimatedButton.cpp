@@ -66,6 +66,10 @@ HoverAnimatedButton::HoverAnimatedButton(
         normalSprite, hoverSprite, releasedSprite, pressedSprite
     ), animationDuration_(interactionDuration)
 {
+    // startAnimation(fromSprite, toSprite)
+    // startAnimationAfterUnRelease
+    // startAnimationInCtor
+    
     prevSprite_.setPrevSprite(hoveredSprite_);
     sprite_ = normalSprite_;
     animationType_ = AnimationType::Unhovering;
@@ -79,6 +83,7 @@ void HoverAnimatedButton::onHover(Graphics::Window& window, const Graphics::Even
         return;
     }
 
+    // animate onHover
     if (animationType_ != AnimationType::Hovering)
     {
         animationBeginTime_ = std::chrono::steady_clock::now();
@@ -103,6 +108,7 @@ void HoverAnimatedButton::onUnhover(Graphics::Window& window, const Graphics::Ev
         return;
     }
 
+    // animate on Unhover
     if (animationType_ != AnimationType::Unhovering)
     {
         animationBeginTime_ = std::chrono::steady_clock::now();
@@ -123,6 +129,7 @@ void HoverAnimatedButton::onRelease(Graphics::Window& window, const Graphics::Ev
 {
     if (state_ == State::Released)
     {
+        // startAnimationOnUnRelease
         state_  = State::Normal;
         sprite_ = hoveredSprite_;
         prevSprite_.setPrevSprite(normalSprite_);

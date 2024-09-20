@@ -53,6 +53,14 @@ public:
     virtual void onPress    (Graphics::Window& window, const Graphics::Event& event) override;
     virtual void onHover    (Graphics::Window& window, const Graphics::Event& event) override;
     virtual void onUnhover  (Graphics::Window& window, const Graphics::Event& event) override;
+
+private:
+
+    void animationCtor();
+
+    void animateOnHover();
+    void animateOnUnhover();
+    void animationCtorOnUnrelease();
 };
 
 } // namespace Gui

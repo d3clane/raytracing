@@ -23,7 +23,7 @@ public:
     void deleteButtonFromShowList(Button* button);
     size_t showListSize();
 
-    const ButtonManager& buttonManager(); // TODO: THINK OF REFERENCE RETURN
+    const ButtonManager& buttonManager();
 
     Button*&      operator[](int pos);
     const Button* operator[](int pos) const;
