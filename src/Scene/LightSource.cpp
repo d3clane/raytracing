@@ -71,7 +71,7 @@ Graphics::Color calcSpherePixelColor(
     return resultColor;
 }
 
-} // anonymous namespace
+} // namespace anonymous
 
 void LightSource::highlightSphere(
     const CoordsSystem& coordsSystem, const Sphere& sphere, const Camera& camera, Graphics::PixelsArray& pixels

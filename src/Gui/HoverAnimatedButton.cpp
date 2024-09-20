@@ -1,6 +1,8 @@
 #include "Graphics/PixelsArray.hpp"
 #include "Gui/HoverAnimatedButton.hpp"
 
+#include <iostream>
+
 namespace Gui
 {
 
@@ -67,15 +69,17 @@ HoverAnimatedButton::HoverAnimatedButton(
     ), animationDuration_(interactionDuration)
 {
     prevSprite_.setPrevSprite(hoveredSprite_);
-    sprite_     = normalSprite_;
+    sprite_ = normalSprite_;
     animationType_ = AnimationType::Unhovering;
 }
 
 void HoverAnimatedButton::onHover(Graphics::Window& window, const Graphics::Event& event)
 {
+    std::cout << "ME\n";
+
     if (state_ == State::Released)
     {
-        action(window, event);
+        completeActions(actions_);
         return;
     }
 
@@ -99,7 +103,7 @@ void HoverAnimatedButton::onUnhover(Graphics::Window& window, const Graphics::Ev
 {
     if (state_ == State::Released)
     {
-        action(window, event);
+        completeActions(actions_);
         return;
     }
 
@@ -123,15 +127,20 @@ void HoverAnimatedButton::onRelease(Graphics::Window& window, const Graphics::Ev
 {
     if (state_ == State::Released)
     {
-        undoAction(window, event);
-
         state_  = State::Normal;
         sprite_ = hoveredSprite_;
         prevSprite_.setPrevSprite(normalSprite_);
         animationType_ = AnimationType::Hovering;
+
+        completeActions(undoActions_);
     }
     else
-        action(window, event);
+    {
+        state_  = State::Released;
+        sprite_ = releasedSprite_;
+
+        completeActions(actions_);
+    }
 }
 
 void HoverAnimatedButton::onPress(Graphics::Window& window, const Graphics::Event& event)

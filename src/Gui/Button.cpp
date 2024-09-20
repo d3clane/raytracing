@@ -1,4 +1,5 @@
 #include "Gui/Button.hpp"
+#include "Gui/CustomActions.hpp"
 
 #include "Graphics/Mouse.hpp"
 
@@ -18,6 +19,7 @@ void configureSprite(
 }
 
 } // namespace anonymous
+
 Button::Button(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
     const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
@@ -112,9 +114,15 @@ void Button::onRelease(Graphics::Window& window, const Graphics::Event& event)
     {
         state_  = State::Normal;
         sprite_ = normalSprite_;
+
+        completeActions(undoActions_);
     }
     else
-        action(window, event);
+    {
+        sprite_ = releasedSprite_;
+
+        completeActions(actions_);
+    }
 }
 
 void Button::onHover  (Graphics::Window& window, const Graphics::Event& event)
@@ -122,7 +130,7 @@ void Button::onHover  (Graphics::Window& window, const Graphics::Event& event)
     if (state_ != State::Released)
         sprite_ = hoveredSprite_;
     else
-        action(window, event);
+        completeActions(actions_);
 }
 
 void Button::onUnhover(Graphics::Window& window, const Graphics::Event& event)
@@ -130,11 +138,10 @@ void Button::onUnhover(Graphics::Window& window, const Graphics::Event& event)
     switch (state_)
     {
         case State::Released:
-            action(window, event);
+            completeActions(actions_);
             break;
 
         case State::Normal:
-            sprite_ = normalSprite_;
             break;
 
         default: // unreachable
@@ -146,6 +153,44 @@ void Button::onUnhover(Graphics::Window& window, const Graphics::Event& event)
 Button::operator Graphics::Sprite() const
 { 
     return sprite_;
+}
+
+int Button::addAction(Action* action)
+{
+    actions_.push_back(action);
+    return actions_.size() - 1;
+}
+
+int Button::addUndoAction(Action* action)
+{
+    undoActions_.push_back(action);
+    return undoActions_.size() - 1;
+}
+
+void Button::deleteAction(Action* action)
+{
+    std::remove(actions_.begin(), actions_.end(), action);
+}
+
+void Button::deleteUndoAction(Action* action)
+{
+    std::remove(undoActions_.begin(), undoActions_.end(), action);
+}
+
+void Button::deleteAction(int pos)
+{
+    actions_.erase(actions_.begin() + pos);
+}
+
+void Button::deleteUndoAction(int pos)
+{
+    undoActions_.erase(undoActions_.begin() + pos);
+}
+
+void completeActions(const std::vector< Action* >& actions)
+{
+    for (Action* action : actions)
+        (*action)();
 }
 
 } // namespace Gui

@@ -17,7 +17,7 @@ void ButtonManager::deleteButton(Button* button)
     std::remove(buttons_.begin(), buttons_.end(), button);
 }
 
-void ButtonManager::manageButtons(Graphics::Window& window, const Graphics::Event& event)
+void ButtonManager::manageButtons(Graphics::Window& window, const Graphics::Event& event) const
 {
     for (Button* button : buttons_)
     {

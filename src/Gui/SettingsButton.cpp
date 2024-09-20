@@ -29,24 +29,24 @@ void SettingsButton::deleteButtonFromShowList(Button* button)
     buttonManager_.deleteButton(button);
 }
 
-void SettingsButton::action(Graphics::Window& window, const Graphics::Event& event)
+size_t SettingsButton::showListSize()
 {
-    state_  = State::Released;
-    sprite_ = releasedSprite_;
-
-    for (int i = 0; i < buttonManager_.size(); ++i)
-        buttonManager_[i]->showing(true);
-
-    buttonManager_.manageButtons(window, event);
+    return buttonManager_.size();
 }
 
-void SettingsButton::undoAction(Graphics::Window& window, const Graphics::Event& event)
+const ButtonManager& SettingsButton::buttonManager()
 {
-    state_  = Button::State::Normal;
-    sprite_ = normalSprite_;
+    return buttonManager_;
+}
 
-    for (int i = 0; i < buttonManager_.size(); ++i)
-        buttonManager_[i]->showing(false);
+Button*& SettingsButton::operator[](int pos)
+{
+    return buttonManager_[pos];
+}
+
+const Button* SettingsButton::operator[](int pos) const
+{
+    return buttonManager_[pos];
 }
 
 } // namespace Gui

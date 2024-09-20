@@ -9,6 +9,8 @@
 namespace Gui
 {
 
+class Action;
+
 class Button
 {
 public: 
@@ -38,7 +40,16 @@ public:
     State state() const        { return state_; }
     void state(State newState) { state_ = newState; }
 
-    virtual void interact (Graphics::Window& window, const Graphics::Event& event);
+    int  addAction       (Action* action);
+    int  addUndoAction   (Action* action);
+    void deleteAction    (Action* action);
+    void deleteUndoAction(Action* action);
+    void deleteAction    (int pos);
+    void deleteUndoAction(int pos);
+
+    
+
+    virtual void interact   (Graphics::Window& window, const Graphics::Event& event);
 
     operator Graphics::Sprite() const;
 
@@ -48,8 +59,6 @@ private:
     virtual void onHover    (Graphics::Window& window, const Graphics::Event& event);
     virtual void onUnhover  (Graphics::Window& window, const Graphics::Event& event);
 
-    virtual void action     (Graphics::Window& window, const Graphics::Event& event) = 0; 
-    virtual void undoAction (Graphics::Window& window, const Graphics::Event& event) = 0;
 protected:
     Graphics::WindowPoint topLeft_;
     unsigned int width_, height_;
@@ -62,7 +71,12 @@ protected:
     Graphics::Sprite hoveredSprite_;
     Graphics::Sprite releasedSprite_;
     Graphics::Sprite pressedSprite_;
+
+    std::vector< Action* > actions_;
+    std::vector< Action* > undoActions_;
 };
+
+void completeActions(const std::vector< Action* >& actions);
 
 } // namespace Gui
 

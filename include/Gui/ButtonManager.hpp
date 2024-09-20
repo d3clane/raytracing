@@ -16,7 +16,7 @@ public:
     int  addButton   (Button* button);
     void deleteButton(Button* button);
 
-    void manageButtons(Graphics::Window& window, const Graphics::Event& event);
+    void manageButtons(Graphics::Window& window, const Graphics::Event& event) const;
 
     int size() const { return buttons_.size(); }
 

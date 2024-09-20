@@ -21,10 +21,12 @@ public:
 
     void addButtonInShowList     (Button* button);
     void deleteButtonFromShowList(Button* button);
+    size_t showListSize();
 
-private:
-    virtual void action     (Graphics::Window& window, const Graphics::Event& event) override;
-    virtual void undoAction (Graphics::Window& window, const Graphics::Event& event) override;
+    const ButtonManager& buttonManager(); // TODO: THINK OF REFERENCE RETURN
+
+    Button*&      operator[](int pos);
+    const Button* operator[](int pos) const;
 };
 
 } // namespace Gui

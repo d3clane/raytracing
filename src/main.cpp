@@ -6,11 +6,13 @@
 #include "Scene/Sphere.hpp"
 #include "Scene/Camera.hpp"
 
+#include "Gui/Button.hpp"
 #include "Gui/SettingsButton.hpp"
-#include "Gui/MoveButton.hpp"
-#include "Gui/ColorSphereButton.hpp"
+#include "Gui/CustomActions.hpp"
 
 #include <iostream>
+
+void func(Gui::Action* act) { (*act)(); }
 
 #define TEXTURE_LOAD(FILE_NAME, TEXTURE_NAME, SPRITE_NAME)      \ 
     Graphics::Texture TEXTURE_NAME;                             \
@@ -60,6 +62,7 @@ int main()
     TEXTURE_LOAD("media/textures/purpleButton.png", colorPurpleTexture, colorPurpleSprite);
 
     std::chrono::milliseconds interactionDuration{2000};
+    Graphics::Event event;
 
     Gui::SettingsButton settingsButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, 0}, 
@@ -67,15 +70,24 @@ int main()
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
         interactionDuration
     };
+    Gui::ShowButtonsAction showButtonsAction{&settingsButton, window, event};
+    Gui::HideButtonsAction hideButtonsAction{&settingsButton, window, event};
+    settingsButton.addAction    (&showButtonsAction);
+    settingsButton.addUndoAction(&hideButtonsAction);
 
     const double moveStep = 2;
-    Gui::MoveButton moveRight{
+    Gui::HoverAnimatedButton moveRightButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-        &sphere, Scene::Vector{moveStep, 0, 0}
+        interactionDuration
     };
+
+    Gui::MoveAction moveRightAction{&sphere, Scene::Vector{moveStep, 0, 0}};
+    moveRightButton.addAction(&moveRightAction);
+
+#if 0
+    moveRight.addAction()
     Gui::MoveButton moveDown{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
@@ -154,19 +166,25 @@ int main()
     settingsButton.addButtonInShowList(&colorBlueButton     );
     settingsButton.addButtonInShowList(&colorWhiteButton    );
     settingsButton.addButtonInShowList(&colorPurpleButton   );
-    
+#endif
+
+    settingsButton.addButtonInShowList(&moveRightButton);
+
     Gui::ButtonManager buttonsManager;
     buttonsManager.addButton(&settingsButton);
 
     while (window.isOpen())
     {
-        Graphics::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == Graphics::Event::EventType::Closed)
                 window.close();
         }
 
+        if (event.type == Graphics::Event::EventType::MouseButtonReleased)
+        {
+            std::cout << "MY\n";
+        }
         window.clear();
         
         Graphics::PixelsArray pixelsArray{window.width_, window.height_, Graphics::WindowPoint{0, 0}};
@@ -180,4 +198,5 @@ int main()
         buttonsManager.manageButtons(window, event);
         window.display();
     }
+
 }
