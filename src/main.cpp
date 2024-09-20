@@ -20,6 +20,54 @@ void func(Gui::Action* act) { (*act)(); }
     TEXTURE_NAME.loadFromFile(FILE_NAME);                       \
     SPRITE_NAME.setTexture(TEXTURE_NAME);                   
 
+class CreateHoverAnimatedButton
+{
+    size_t buttonWidth_;
+    size_t buttonHeight_;
+
+    bool showing_;
+
+    Graphics::Sprite normalSprite_;
+    Graphics::Sprite hoveredSprite_;
+    Graphics::Sprite releasedSprite_;
+    Graphics::Sprite pressedSprite_;
+
+    std::chrono::milliseconds interactionDuration_;
+
+public:
+    CreateHoverAnimatedButton(
+        size_t buttonWidth, size_t buttonHeight, bool showing,
+        Graphics::Sprite normalSprite, Graphics::Sprite hoveredSprite,
+        Graphics::Sprite releasedSprite, Graphics::Sprite pressedSprite,
+        std::chrono::milliseconds interactionDuration
+    ) : buttonWidth_(buttonWidth), buttonHeight_(buttonHeight), showing_(showing), 
+        normalSprite_(normalSprite), hoveredSprite_(hoveredSprite), releasedSprite_(releasedSprite),
+        pressedSprite_(pressedSprite), interactionDuration_(interactionDuration) {}
+
+    Gui::HoverAnimatedButton operator()(
+        const Graphics::WindowPoint& topLeftPos, Gui::Action* action
+    );
+};
+
+class CreateColorButton
+{
+    size_t buttonWidth_;
+    size_t buttonHeight_;
+
+    bool showing_;
+
+    Gui::Button::State state_;
+
+public:
+    CreateColorButton(
+        size_t buttonWidth, size_t buttonHeight, bool showing, Gui::Button::State state
+    ) : buttonWidth_(buttonWidth), buttonHeight_(buttonHeight), showing_(showing), state_(state) {}
+
+    Gui::Button operator()(
+        const Graphics::WindowPoint& topLeftPos, const Graphics::Sprite& sprite
+    );
+};
+
 int main()
 {
     const size_t screenWidth  = 800;
@@ -27,32 +75,29 @@ int main()
     const size_t buttonWidth  = 128;
     const size_t buttonHeight = 64;
 
-    const Graphics::Color black{0, 0, 0, 255};
-    const Graphics::Color white{255, 255, 255, 255};
-    const Graphics::Color red  {255, 0, 0, 255};
-    const Graphics::Color green{0, 255, 0, 255};
-    const Graphics::Color blue {0, 0, 255, 255};
+    const Graphics::Color black {0, 0, 0, 255};
+    const Graphics::Color white {255, 255, 255, 255};
+    const Graphics::Color red   {255, 0, 0, 255};
+    const Graphics::Color green {0, 255, 0, 255};
+    const Graphics::Color blue  {0, 0, 255, 255};
     const Graphics::Color yellow{255, 255, 0, 255};
     const Graphics::Color purple{255, 0, 255, 255};
-    const Graphics::Color cyan {0, 255, 255, 255};
+    const Graphics::Color cyan  {0, 255, 255, 255};
 
     Graphics::Window window{screenWidth, screenHeight, "RayTracing"};
-    Scene::Sphere sphere{Scene::Point{screenWidth / 2, screenHeight / 2, 0}, screenHeight / 3, 
-        purple
-    };
+    Scene::Sphere sphere{Scene::Point{screenWidth / 2, screenHeight / 2, 0}, screenHeight / 3, purple};
 
     Scene::CoordsSystem coords{1u, Scene::Point{0, 0, 0}};
 
     Scene::LightSource lightSource1{Scene::Point{-100, screenHeight / 2, 0}, yellow};
     Scene::LightSource lightSource2{Scene::Point{screenWidth, screenHeight, 300}, cyan};
-
     Scene::LightSource lightSource3{Scene::Point{screenWidth, 0, -200}, white};
 
     Scene::Camera camera{Scene::Point{screenWidth / 2, screenHeight / 2, 500}};
 
     TEXTURE_LOAD("media/textures/buttonNormal.jpeg" , normalTexture , normalSprite  );
     TEXTURE_LOAD("media/textures/buttonReleased.png", releaseTexture, releasedSprite);
-    TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoverSprite   );
+    TEXTURE_LOAD("media/textures/buttonHovered.png" , hoverTexture  , hoveredSprite   );
     Graphics::Sprite pressedSprite{};
 
     TEXTURE_LOAD("media/textures/redButton.png"   , colorRedTexture  , colorRedSprite    );
@@ -67,7 +112,7 @@ int main()
     Gui::SettingsButton settingsButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, 0}, 
         buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+        normalSprite, hoveredSprite, releasedSprite, pressedSprite,
         interactionDuration
     };
     Gui::ShowButtonsAction showButtonsAction{&settingsButton, window, event};
@@ -77,105 +122,74 @@ int main()
 
     const double moveStep = 2;
 
-    Gui::MoveAction moveRightAction{&sphere, Scene::Vector{moveStep, 0, 0 }};
-    Gui::MoveAction moveLeftAction {&sphere, Scene::Vector{-moveStep, 0, 0}};
-    Gui::MoveAction moveUpAction   {&sphere, Scene::Vector{0, -moveStep, 0}};
-    Gui::MoveAction moveDownAction {&sphere, Scene::Vector{0, moveStep, 0 }};
-    Gui::MoveAction moveForwardAction{&sphere, Scene::Vector{0, 0, -moveStep}};
-    Gui::MoveAction moveBackwardsAction{&sphere, Scene::Vector{0, 0, moveStep}};
+    Gui::MoveAction moveRightAction         {&sphere, Scene::Vector{moveStep, 0, 0 }};
+    Gui::MoveAction moveLeftAction          {&sphere, Scene::Vector{-moveStep, 0, 0}};
+    Gui::MoveAction moveUpAction            {&sphere, Scene::Vector{0, -moveStep, 0}};
+    Gui::MoveAction moveDownAction          {&sphere, Scene::Vector{0, moveStep, 0 }};
+    Gui::MoveAction moveForwardAction       {&sphere, Scene::Vector{0, 0, -moveStep}};
+    Gui::MoveAction moveBackwardsAction     {&sphere, Scene::Vector{0, 0, moveStep }};
 
-    Gui::HoverAnimatedButton moveRight{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
+    CreateHoverAnimatedButton createHoverButton{
+        buttonWidth, buttonHeight, true, 
+        normalSprite, hoveredSprite, releasedSprite, pressedSprite,
         interactionDuration
     };
-    moveRight.addAction(&moveRightAction);
 
-    Gui::HoverAnimatedButton moveDown{
-        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration
-    };
-    moveDown.addAction(&moveDownAction);
+    auto moveRightButton = createHoverButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight}, &moveRightAction
+    );
+    auto moveDownButton = createHoverButton(
+        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight}, &moveDownAction
+    );
+    auto moveLeftButton = createHoverButton(
+        Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight}, &moveLeftAction
+    );
+    auto moveUpButton   = createHoverButton(
+        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight}, &moveUpAction
+    );
+    auto moveForwardButton = createHoverButton(
+        Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight}, &moveForwardAction
+    );
+    auto moveBackwardsButton = createHoverButton(
+        Graphics::WindowPoint{0, screenHeight - buttonHeight}, &moveBackwardsAction
+    );
 
-    Gui::HoverAnimatedButton moveLeft{
-        Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration
-    };
-    moveLeft.addAction(&moveLeftAction);
+    CreateColorButton createColorButton(buttonWidth, buttonHeight, true, Gui::Button::State::Normal);
 
-    Gui::HoverAnimatedButton moveUp{
-        Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration
-    };
-    moveUp.addAction(&moveUpAction);
+    auto colorRedButton = createColorButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 3 * buttonHeight}, colorRedSprite
+    );
+    auto colorGreenButton = createColorButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 4 * buttonHeight}, colorGreenSprite
+    );
+    auto colorBlueButton = createColorButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 5 * buttonHeight}, colorBlueSprite
+    );
+    auto colorWhiteButton = createColorButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 6 * buttonHeight}, colorWhiteSprite
+    );
+    auto colorPurpleButton = createColorButton(
+        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 7 * buttonHeight}, colorPurpleSprite
+    );
 
-    Gui::HoverAnimatedButton moveForward{
-        Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration
-    };
-    moveForward.addAction(&moveForwardAction);
-
-    Gui::HoverAnimatedButton moveBackwards{
-        Graphics::WindowPoint{0, screenHeight - buttonHeight},
-        buttonWidth, buttonHeight, true,
-        normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-    };
-    moveBackwards.addAction(&moveBackwardsAction);
-
-    Gui::Button colorRedButton{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 3 * buttonHeight},
-        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
-        colorRedSprite, colorRedSprite, colorRedSprite, colorRedSprite,
-    };
-    Gui::Button colorGreenButton{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 4 * buttonHeight},
-        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
-        colorGreenSprite, colorGreenSprite, colorGreenSprite, colorGreenSprite,
-    };
-    Gui::Button colorBlueButton{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 5 * buttonHeight},
-        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
-        colorBlueSprite, colorBlueSprite, colorBlueSprite, colorBlueSprite,
-    };
-    Gui::Button colorWhiteButton{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 6 * buttonHeight},
-        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
-        colorWhiteSprite, colorWhiteSprite, colorWhiteSprite, colorWhiteSprite,
-    };
-    Gui::Button colorPurpleButton{
-        Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 7 * buttonHeight},
-        buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
-        colorPurpleSprite, colorPurpleSprite, colorPurpleSprite, colorPurpleSprite,
-    };
-
-    Gui::ColorSphereAction colorRedAction{&colorRedButton, &sphere, red};
-    Gui::ColorSphereAction colorGreenAction{&colorGreenButton, &sphere, green};
-    Gui::ColorSphereAction colorBlueAction{&colorBlueButton, &sphere, blue};
-    Gui::ColorSphereAction colorWhiteAction{&colorWhiteButton, &sphere, white};
+    Gui::ColorSphereAction colorRedAction   {&colorRedButton, &sphere, red};
+    Gui::ColorSphereAction colorGreenAction {&colorGreenButton, &sphere, green};
+    Gui::ColorSphereAction colorBlueAction  {&colorBlueButton, &sphere, blue};
+    Gui::ColorSphereAction colorWhiteAction {&colorWhiteButton, &sphere, white};
     Gui::ColorSphereAction colorPurpleAction{&colorPurpleButton, &sphere, purple};
-    
+
     colorRedButton.addAction    (&colorRedAction);
     colorGreenButton.addAction  (&colorGreenAction);
     colorBlueButton.addAction   (&colorBlueAction);
     colorWhiteButton.addAction  (&colorWhiteAction);
     colorPurpleButton.addAction (&colorPurpleAction);
 
-    settingsButton.addButtonInShowList(&moveLeft            );
-    settingsButton.addButtonInShowList(&moveRight           );
-    settingsButton.addButtonInShowList(&moveUp              );
-    settingsButton.addButtonInShowList(&moveDown            );
-    settingsButton.addButtonInShowList(&moveForward         );
-    settingsButton.addButtonInShowList(&moveBackwards       );
+    settingsButton.addButtonInShowList(&moveLeftButton      );
+    settingsButton.addButtonInShowList(&moveRightButton     );
+    settingsButton.addButtonInShowList(&moveUpButton        );
+    settingsButton.addButtonInShowList(&moveDownButton      );
+    settingsButton.addButtonInShowList(&moveForwardButton   );
+    settingsButton.addButtonInShowList(&moveBackwardsButton );
     settingsButton.addButtonInShowList(&colorRedButton      );
     settingsButton.addButtonInShowList(&colorGreenButton    );
     settingsButton.addButtonInShowList(&colorBlueButton     );
@@ -208,4 +222,32 @@ int main()
         window.display();
     }
 
+}
+
+Gui::HoverAnimatedButton CreateHoverAnimatedButton::operator()(
+    const Graphics::WindowPoint& topLeftPos, Gui::Action* action
+)
+{
+    Gui::HoverAnimatedButton button{
+        topLeftPos,
+        buttonWidth_, buttonHeight_, showing_,
+        normalSprite_, hoveredSprite_, releasedSprite_, pressedSprite_,
+        interactionDuration_
+    };
+
+    button.addAction(action);
+
+    return button;
+}
+
+Gui::Button CreateColorButton::operator()(
+    const Graphics::WindowPoint& topLeftPos, const Graphics::Sprite& sprite
+)
+{
+    Gui::Button colorRedButton{
+        topLeftPos, buttonWidth_, buttonHeight_, showing_, state_,
+        sprite, sprite, sprite, sprite,
+    };
+
+    return colorRedButton;
 }

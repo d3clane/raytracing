@@ -47,8 +47,6 @@ public:
     void deleteAction    (int pos);
     void deleteUndoAction(int pos);
 
-    
-
     virtual void interact   (Graphics::Window& window, const Graphics::Event& event);
 
     operator Graphics::Sprite() const;
