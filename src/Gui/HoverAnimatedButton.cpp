@@ -1,8 +1,6 @@
 #include "Graphics/PixelsArray.hpp"
 #include "Gui/HoverAnimatedButton.hpp"
 
-#include <iostream>
-
 namespace Gui
 {
 
@@ -75,8 +73,6 @@ HoverAnimatedButton::HoverAnimatedButton(
 
 void HoverAnimatedButton::onHover(Graphics::Window& window, const Graphics::Event& event)
 {
-    std::cout << "ME\n";
-
     if (state_ == State::Released)
     {
         completeActions(actions_);

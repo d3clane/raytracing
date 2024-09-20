@@ -76,84 +76,99 @@ int main()
     settingsButton.addUndoAction(&hideButtonsAction);
 
     const double moveStep = 2;
-    Gui::HoverAnimatedButton moveRightButton{
+
+    Gui::MoveAction moveRightAction{&sphere, Scene::Vector{moveStep, 0, 0 }};
+    Gui::MoveAction moveLeftAction {&sphere, Scene::Vector{-moveStep, 0, 0}};
+    Gui::MoveAction moveUpAction   {&sphere, Scene::Vector{0, -moveStep, 0}};
+    Gui::MoveAction moveDownAction {&sphere, Scene::Vector{0, moveStep, 0 }};
+    Gui::MoveAction moveForwardAction{&sphere, Scene::Vector{0, 0, -moveStep}};
+    Gui::MoveAction moveBackwardsAction{&sphere, Scene::Vector{0, 0, moveStep}};
+
+    Gui::HoverAnimatedButton moveRight{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
         interactionDuration
     };
+    moveRight.addAction(&moveRightAction);
 
-    Gui::MoveAction moveRightAction{&sphere, Scene::Vector{moveStep, 0, 0}};
-    moveRightButton.addAction(&moveRightAction);
-
-#if 0
-    moveRight.addAction()
-    Gui::MoveButton moveDown{
+    Gui::HoverAnimatedButton moveDown{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-        &sphere, Scene::Vector{0, moveStep, 0}
+        interactionDuration
     };
-    Gui::MoveButton moveLeft{
+    moveDown.addAction(&moveDownAction);
+
+    Gui::HoverAnimatedButton moveLeft{
         Graphics::WindowPoint{screenWidth - 3 * buttonWidth, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-        &sphere, Scene::Vector{-moveStep, 0, 0}
+        interactionDuration
     };
-    Gui::MoveButton moveUp{
+    moveLeft.addAction(&moveLeftAction);
+
+    Gui::HoverAnimatedButton moveUp{
         Graphics::WindowPoint{screenWidth - 2 * buttonWidth, screenHeight - 2 * buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-        &sphere, Scene::Vector{0, -moveStep, 0}
+        interactionDuration
     };
+    moveUp.addAction(&moveUpAction);
 
-    Gui::MoveButton moveForward{
+    Gui::HoverAnimatedButton moveForward{
         Graphics::WindowPoint{0, screenHeight - 2 * buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
-        interactionDuration, 
-        &sphere, Scene::Vector{0, 0, -moveStep}
+        interactionDuration
     };
-    Gui::MoveButton moveBackwards{
+    moveForward.addAction(&moveForwardAction);
+
+    Gui::HoverAnimatedButton moveBackwards{
         Graphics::WindowPoint{0, screenHeight - buttonHeight},
         buttonWidth, buttonHeight, true,
         normalSprite, hoverSprite, releasedSprite, pressedSprite,
         interactionDuration, 
-        &sphere, Scene::Vector{0, 0, moveStep}
     };
-    Gui::ColorSphereButton colorRedButton{
+    moveBackwards.addAction(&moveBackwardsAction);
+
+    Gui::Button colorRedButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 3 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorRedSprite, colorRedSprite, colorRedSprite, colorRedSprite,
-        &sphere, red
     };
-    Gui::ColorSphereButton colorGreenButton{
+    Gui::Button colorGreenButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 4 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorGreenSprite, colorGreenSprite, colorGreenSprite, colorGreenSprite,
-        &sphere, green
     };
-    Gui::ColorSphereButton colorBlueButton{
+    Gui::Button colorBlueButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 5 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorBlueSprite, colorBlueSprite, colorBlueSprite, colorBlueSprite,
-        &sphere, blue
     };
-    Gui::ColorSphereButton colorWhiteButton{
+    Gui::Button colorWhiteButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 6 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorWhiteSprite, colorWhiteSprite, colorWhiteSprite, colorWhiteSprite,
-        &sphere, white
     };
-    Gui::ColorSphereButton colorPurpleButton{
+    Gui::Button colorPurpleButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - 7 * buttonHeight},
         buttonWidth, buttonHeight, true, Gui::Button::State::Normal,
         colorPurpleSprite, colorPurpleSprite, colorPurpleSprite, colorPurpleSprite,
-        &sphere, purple
     };
+
+    Gui::ColorSphereAction colorRedAction{&colorRedButton, &sphere, red};
+    Gui::ColorSphereAction colorGreenAction{&colorGreenButton, &sphere, green};
+    Gui::ColorSphereAction colorBlueAction{&colorBlueButton, &sphere, blue};
+    Gui::ColorSphereAction colorWhiteAction{&colorWhiteButton, &sphere, white};
+    Gui::ColorSphereAction colorPurpleAction{&colorPurpleButton, &sphere, purple};
+    
+    colorRedButton.addAction    (&colorRedAction);
+    colorGreenButton.addAction  (&colorGreenAction);
+    colorBlueButton.addAction   (&colorBlueAction);
+    colorWhiteButton.addAction  (&colorWhiteAction);
+    colorPurpleButton.addAction (&colorPurpleAction);
 
     settingsButton.addButtonInShowList(&moveLeft            );
     settingsButton.addButtonInShowList(&moveRight           );
@@ -166,25 +181,19 @@ int main()
     settingsButton.addButtonInShowList(&colorBlueButton     );
     settingsButton.addButtonInShowList(&colorWhiteButton    );
     settingsButton.addButtonInShowList(&colorPurpleButton   );
-#endif
-
-    settingsButton.addButtonInShowList(&moveRightButton);
 
     Gui::ButtonManager buttonsManager;
     buttonsManager.addButton(&settingsButton);
 
     while (window.isOpen())
     {
+        event = {};
         while (window.pollEvent(event))
         {
             if (event.type == Graphics::Event::EventType::Closed)
                 window.close();
         }
 
-        if (event.type == Graphics::Event::EventType::MouseButtonReleased)
-        {
-            std::cout << "MY\n";
-        }
         window.clear();
         
         Graphics::PixelsArray pixelsArray{window.width_, window.height_, Graphics::WindowPoint{0, 0}};

@@ -39,10 +39,7 @@ ShowButtonsAction::ShowButtonsAction(
 void ShowButtonsAction::operator()()
 {
     for (int i = 0; i < button_->showListSize(); ++i)
-    {
         (*button_)[i]->showing(true);
-        (*button_)[i]->state  (Button::State::Normal);
-    }
 
     button_->buttonManager().manageButtons(window_, event_);
 }
