@@ -13,7 +13,7 @@ class Action;
 
 class Button
 {
-public: 
+public:
     enum class State
     {
         Normal,
@@ -22,12 +22,37 @@ public:
         Inactive,
     };
 
+    struct CtorParams
+    {
+        Graphics::WindowPoint topLeft;
+        unsigned int width;
+        unsigned int height;
+        bool showing;
+        State state;
+        Graphics::Sprite normalSprite;
+        Graphics::Sprite hoverSprite;
+        Graphics::Sprite releaseSprite;
+        Graphics::Sprite pressedSprite;
+
+        CtorParams(
+            const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, 
+            bool showing, State state, 
+            const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite,
+            const Graphics::Sprite& releaseSprite, const Graphics::Sprite& pressedSprite
+        );
+    };
+
     Button(
         const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
         const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
         const Graphics::Sprite& initReleaseSprite, const Graphics::Sprite& initPressedSprite
     );
 
+    Button(
+        const Graphics::WindowPoint& topLeft, const Graphics::Sprite& oneSpriteForAll, 
+        const CtorParams& otherParams
+    );
+    
     virtual ~Button() = default;
 
     // functions

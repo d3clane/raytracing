@@ -56,6 +56,12 @@ HoverAnimatedButton::PrevSpriteWrap::operator Graphics::Sprite&()
     return prevSprite_;
 }
 
+HoverAnimatedButton::CtorParams::CtorParams(
+    const std::chrono::milliseconds& animationDuration, const Button::CtorParams& otherParams
+) : Button::CtorParams(otherParams), animationDuration(animationDuration)
+{
+}
+
 HoverAnimatedButton::HoverAnimatedButton(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing,
     const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite, 
@@ -73,6 +79,16 @@ HoverAnimatedButton::HoverAnimatedButton(
     prevSprite_.setPrevSprite(hoveredSprite_);
     sprite_ = normalSprite_;
     animationType_ = AnimationType::Unhovering;
+}
+
+HoverAnimatedButton::HoverAnimatedButton(
+    const Graphics::WindowPoint& topLeft, const CtorParams& otherParams
+) : HoverAnimatedButton(
+        topLeft, otherParams.width, otherParams.height, otherParams.showing,
+        otherParams.normalSprite, otherParams.hoverSprite, otherParams.releaseSprite, otherParams.pressedSprite,
+        otherParams.animationDuration
+    )
+{
 }
 
 void HoverAnimatedButton::onHover(Graphics::Window& window, const Graphics::Event& event)

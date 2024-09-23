@@ -20,6 +20,17 @@ void configureSprite(
 
 } // namespace anonymous
 
+Button::CtorParams::CtorParams(
+    const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height,
+    bool showing, State state,
+    const Graphics::Sprite& normalSprite, const Graphics::Sprite& hoverSprite,
+    const Graphics::Sprite& releaseSprite, const Graphics::Sprite& pressedSprite
+) : topLeft(topLeft), width(width), height(height), showing(showing), state(state),
+    normalSprite(normalSprite), hoverSprite(hoverSprite), 
+    releaseSprite(releaseSprite), pressedSprite(pressedSprite)
+{
+}
+
 Button::Button(
     const Graphics::WindowPoint& topLeft, unsigned int width, unsigned int height, bool showing, State state,
     const Graphics::Sprite& initNormalSprite, const Graphics::Sprite& initHoverSprite, 
@@ -56,6 +67,16 @@ Button::Button(
     configureSprite(pressedSprite_,  width_, height_, topLeft_);
 
     sprite_ = normalSprite_;
+}
+
+Button::Button(
+    const Graphics::WindowPoint& topLeft, const Graphics::Sprite& oneSpriteForAll, 
+    const CtorParams& otherParams
+) : Button(
+        topLeft, otherParams.width, otherParams.height, otherParams.showing, otherParams.state,
+        oneSpriteForAll, oneSpriteForAll, oneSpriteForAll, oneSpriteForAll
+    )
+{
 }
 
 bool Button::isHovered(const Graphics::Window& window) const
