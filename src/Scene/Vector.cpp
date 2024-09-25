@@ -42,10 +42,10 @@ Vector Vector::reflectRelatively(const Vector& pivot) const
 {
     Vector normalizedPivot = pivot.getNormalizedVector();
 
-    double pivotLength = pivot.length();
+    double vectorLength = length();
     double cosAngle = cos(*this, normalizedPivot);
 
-    return normalizedPivot * (2 * pivotLength * cosAngle) - *this;
+    return normalizedPivot * (2 * vectorLength * cosAngle) - *this;
 }
 
 Vector operator -(const Vector& self)

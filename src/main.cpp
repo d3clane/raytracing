@@ -87,12 +87,6 @@ int main()
         )
     };
 
-    CreateHoverAnimatedButton createHoverButton{
-        buttonWidth, buttonHeight, true, 
-        normalSprite, hoveredSprite, releasedSprite, pressedSprite,
-        interactionDuration
-    };
-
     Gui::HoverAnimatedButton moveRightButton{
         Graphics::WindowPoint{screenWidth - buttonWidth, screenHeight - buttonHeight}, staticAnimatedButtonParams
     };
